@@ -1,4 +1,4 @@
-=== WindCodex GeoBlock ===
+=== WindCodex GeoBlock – WooCommerce country restrictions with geolocation ===
 Contributors: windcodex
 Tags: woocommerce, country restriction, geolocation, geo blocking, product visibility
 Requires at least: 5.8
