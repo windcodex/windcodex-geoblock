@@ -1,6 +1,6 @@
 <?php
 /**
- * Shortcodes — registers [geoblock_product_message] for use in page builders,
+ * Shortcodes - registers [geoblock_product_message] for use in page builders,
  * custom product templates, and theme files.
  *
  * Usage:
@@ -9,8 +9,8 @@
  *   [geoblock_product_message class="my-custom-class"]
  *
  * Attributes:
- *   id    (int)    — Product ID to check. Defaults to current product in the loop.
- *   class (string) — Extra CSS class(es) to add to the wrapper div.
+ *   id    (int)    - Product ID to check. Defaults to current product in the loop.
+ *   class (string) - Extra CSS class(es) to add to the wrapper div.
  *
  * Returns:
  *   The restriction message HTML if the current visitor is restricted from
@@ -40,10 +40,10 @@ class GeoBlock_Shortcodes {
 		add_shortcode( 'geoblock_product_message', array( $this, 'render_product_message' ) );
 	}
 
-	// ─── Shortcode handlers ───────────────────────────────────────────────────
+	// --- Shortcode handlers ---------------------------------------------------
 
 	/**
-	 * [geoblock_product_message] — renders the restriction message when the
+	 * [geoblock_product_message] - renders the restriction message when the
 	 * current visitor is restricted from the product.
 	 *
 	 * @param  array  $atts  Shortcode attributes.
@@ -59,7 +59,7 @@ class GeoBlock_Shortcodes {
 			'geoblock_product_message'
 		);
 
-		// ── Resolve product ID ─────────────────────────────────────────────
+		// -- Resolve product ID ---------------------------------------------
 		$product_id = (int) $atts['id'];
 
 		if ( ! $product_id ) {
@@ -76,15 +76,15 @@ class GeoBlock_Shortcodes {
 		}
 
 		if ( ! $product_id ) {
-			return ''; // Cannot determine product — render nothing.
+			return ''; // Cannot determine product - render nothing.
 		}
 
-		// ── Check restriction ──────────────────────────────────────────────
+		// -- Check restriction ----------------------------------------------
 		if ( ! $this->restrictions->is_restricted( $product_id ) ) {
-			return ''; // Not restricted — render nothing.
+			return ''; // Not restricted - render nothing.
 		}
 
-		// ── Build message ──────────────────────────────────────────────────
+		// -- Build message --------------------------------------------------
 		$mode = $this->restrictions->get_restriction_mode();
 
 		if ( 'hide' === $mode ) {
@@ -96,11 +96,11 @@ class GeoBlock_Shortcodes {
 		if ( 'catalog_only' === $mode ) {
 			$message = esc_html__( 'This product is not available for purchase in your country.', 'windcodex-geoblock' );
 		} else {
-			// 'message' mode — use custom store message.
+			// 'message' mode - use custom store message.
 			$message = $this->restrictions->get_restriction_message();
 		}
 
-		// ── Build wrapper class ────────────────────────────────────────────
+		// -- Build wrapper class --------------------------------------------
 		// sanitize_html_class() only handles a single class name (strips spaces).
 		// Split on whitespace, sanitize each class individually, then rejoin.
 		$extra_class = '';

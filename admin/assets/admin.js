@@ -457,4 +457,53 @@
 	var savedMode = $( 'input[name="geoblock_mode"]:checked' ).val();
 	if ( savedMode ) { updateRuleSummary( savedMode ); }
 
+	// ── Review notice dismiss ─────────────────────────────────────────────
+	if ( typeof geoblock_notices !== 'undefined' && geoblock_notices.nonce ) {
+		$( document ).on( 'click', '[data-gg-review-action]', function () {
+			var action  = $( this ).data( 'gg-review-action' );
+			var $notice = $( '#gg-review-notice' );
+			$.post( geoblock_notices.ajaxUrl, {
+				action:         'geoblock_dismiss_review',
+				nonce:          geoblock_notices.nonce,
+				dismiss_action: action,
+			} ).always( function () {
+				$notice.slideUp( 200 );
+			} );
+		} );
+
+		// WP's native X button — treat as "Maybe Later" (14-day hide).
+		$( '#gg-review-notice' ).on( 'click', '.notice-dismiss', function () {
+			$.post( geoblock_notices.ajaxUrl, {
+				action:         'geoblock_dismiss_review',
+				nonce:          geoblock_notices.nonce,
+				dismiss_action: 'later',
+			} );
+		} );
+	}
+
+	// ── Help dropdown ─────────────────────────────────────────────────────────
+	var $helpBtn      = $( '#gg-help-btn' );
+	var $helpDropdown = $( '#gg-help-dropdown' );
+
+	$helpBtn.on( 'click', function ( e ) {
+		e.stopPropagation();
+		var opening = $helpDropdown.attr( 'hidden' ) !== undefined;
+		if ( opening ) {
+			$helpDropdown.removeAttr( 'hidden' );
+			$helpBtn.addClass( 'is-open' ).attr( 'aria-expanded', 'true' );
+		} else {
+			$helpDropdown.attr( 'hidden', '' );
+			$helpBtn.removeClass( 'is-open' ).attr( 'aria-expanded', 'false' );
+		}
+	} );
+
+	$( document ).on( 'click', function () {
+		$helpDropdown.attr( 'hidden', '' );
+		$helpBtn.removeClass( 'is-open' ).attr( 'aria-expanded', 'false' );
+	} );
+
+	$helpDropdown.on( 'click', function ( e ) {
+		e.stopPropagation();
+	} );
+
 } )( jQuery );

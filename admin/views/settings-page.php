@@ -1,6 +1,6 @@
 <?php
 /**
- * Settings page view ─ tabbed, AJAX save, one-click reset.
+ * Settings page view - tabbed, AJAX save, one-click reset.
  *
  * @package GeoBlock_Country_Restrictions
  */
@@ -22,12 +22,34 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 ?>
 <!-- Page Header -->
 	<div class="gg-header-card">
-		<div class="gg-breadcrumb">
-			<a href="<?php echo esc_url( admin_url( 'admin.php?page=geoblock-settings' ) ); ?>">
-				<?php esc_html_e( 'GeoBlock', 'windcodex-geoblock' ); ?>
-			</a>
-			<span class="gg-breadcrumb-sep">/</span>
-			<span id="gg-breadcrumb-current"><?php esc_html_e( 'General', 'windcodex-geoblock' ); ?></span>
+		<div class="gg-header-card-inner">
+			<div class="gg-breadcrumb">
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=geoblock-settings' ) ); ?>">
+					<?php esc_html_e( 'GeoBlock', 'windcodex-geoblock' ); ?>
+				</a>
+				<span class="gg-breadcrumb-sep">/</span>
+				<span id="gg-breadcrumb-current"><?php esc_html_e( 'General', 'windcodex-geoblock' ); ?></span>
+			</div>
+			<div class="gg-help-wrap">
+				<button type="button" class="gg-help-btn" id="gg-help-btn" aria-expanded="false" aria-haspopup="true">
+					<span class="dashicons dashicons-editor-help"></span>
+					<?php esc_html_e( 'Help', 'windcodex-geoblock' ); ?>
+				</button>
+				<div class="gg-help-dropdown" id="gg-help-dropdown" hidden>
+					<a href="https://docs.windcodex.com/docs/geoblock" target="_blank" rel="noopener" class="gg-help-item">
+						<span class="gg-help-item-icon dashicons dashicons-media-document"></span>
+						<?php esc_html_e( 'Documentation', 'windcodex-geoblock' ); ?>
+					</a>
+					<a href="https://wordpress.org/support/plugin/windcodex-geoblock/reviews/#new-post" target="_blank" rel="noopener" class="gg-help-item">
+						<span class="gg-help-item-icon dashicons dashicons-star-filled"></span>
+						<?php esc_html_e( 'Submit a Review', 'windcodex-geoblock' ); ?>
+					</a>
+					<a href="https://windcodex.com/product/woocommerce-country-restriction-plugin/" target="_blank" rel="noopener" class="gg-help-item">
+						<span class="gg-help-item-icon dashicons dashicons-awards"></span>
+						<?php esc_html_e( 'Upgrade to Pro', 'windcodex-geoblock' ); ?>
+					</a>
+				</div>
+			</div>
 		</div>
 		<!-- <div class="gg-page-header">
 			<div class="gg-header-text">
@@ -52,6 +74,7 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 		</div> -->
 	</div>
 <div class="wrap gg-wrap">
+<?php do_action( 'geoblock_before_settings' ); ?>
 
 	<!-- Geolocation warning -->
 	<?php if ( ! $gg_geo_active ) : ?>
@@ -125,7 +148,7 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 								</span>
 							</label>
 
-							<!-- Redirect sub-option ─only visible when Hide is selected -->
+							<!-- Redirect sub-option -only visible when Hide is selected -->
 							<div class="gg-sub-option<?php echo ( 'hide' !== $gg_mode ) ? ' gg-hidden' : ''; ?>" id="gg-sub-redirect">
 								<div class="gg-sub-option-inner">
 									<label class="gg-sub-toggle-label">
@@ -319,7 +342,7 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 							</label>
 							<div class="gg-toggle-label">
 								<span class="gg-toggle-main"><?php esc_html_e( 'Always use IP-based geolocation', 'windcodex-geoblock' ); ?></span>
-								<span class="gg-toggle-sub"><?php esc_html_e( 'By default GeoBlock uses a logged-in customer saved shipping address for maximum accuracy. Enable this to always use IP detection instead ─useful when shipping addresses may not reflect the customer physical location.', 'windcodex-geoblock' ); ?></span>
+								<span class="gg-toggle-sub"><?php esc_html_e( 'By default GeoBlock uses a logged-in customer saved shipping address for maximum accuracy. Enable this to always use IP detection instead -useful when shipping addresses may not reflect the customer physical location.', 'windcodex-geoblock' ); ?></span>
 							</div>
 						</div>
 					</div>
@@ -354,6 +377,7 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 
 			</div><!-- .gg-card -->
 		</div><!-- [Advanced] -->
+
 
 		<!-- Footer Action Bar -->
 		<div class="gg-footer-bar" id="gg-footer-bar" data-tab-visible="general,advanced">

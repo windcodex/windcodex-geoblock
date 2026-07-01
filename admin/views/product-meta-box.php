@@ -119,7 +119,7 @@ $names_str = implode( ', ', $country_names );
 		<div class="gg-rule-summary gg-summary-none" id="gg-rule-summary">
 			<span class="gg-summary-icon">&#9989;</span>
 			<span class="gg-summary-text">
-				<?php esc_html_e( 'No restrictions set ─ this product is available to customers in all countries.', 'windcodex-geoblock' ); ?>
+				<?php esc_html_e( 'No restrictions set - this product is available to customers in all countries.', 'windcodex-geoblock' ); ?>
 			</span>
 		</div>
 		<?php endif; ?>

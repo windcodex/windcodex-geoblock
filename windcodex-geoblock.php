@@ -4,7 +4,7 @@
  * Plugin Name:       WindCodex GeoBlock
  * Tagline:           Country Restrictions for WooCommerce
  * Description:       Restrict WooCommerce products by country using geolocation. Hide products, block purchases, or show a custom message per product. No API key required.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Author:            WindCodex
  * Author URI:        https://www.windcodex.com
  * License:           GPL v2 or later
@@ -12,6 +12,7 @@
  * Text Domain:       windcodex-geoblock
  * Domain Path:       /languages
  * Requires at least: 5.8
+ * Tested up to:      7.0
  * Requires PHP:      7.4
  * Requires Plugins: woocommerce
  * WC requires at least: 7.0
@@ -22,9 +23,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// --- Constants ----------------------------------------------------------------
 
-define( 'GEOBLOCK_VERSION',     '1.0.0' );
+define( 'GEOBLOCK_VERSION',     '1.0.1' );
 define( 'GEOBLOCK_PLUGIN_FILE', __FILE__ );
 define( 'GEOBLOCK_PLUGIN_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'GEOBLOCK_PLUGIN_URL',  plugin_dir_url( __FILE__ ) );
@@ -50,7 +51,7 @@ function geoblock_has_woocommerce(): bool {
 	return false;
 }
 
-// ─── WooCommerce dependency check ─────────────────────────────────────────────
+// --- WooCommerce dependency check ---------------------------------------------
 
 function geoblock_check_woocommerce() {
 	if ( ! geoblock_has_woocommerce() ) {
@@ -74,7 +75,32 @@ function geoblock_missing_wc_notice() {
 	echo '</p></div>';
 }
 
-// ─── Declare WooCommerce HPOS compatibility ────────────────────────────────────
+// --- Pro Active check ---------------------------------------------
+
+function geoblock_check_pro_active() {
+
+	if ( defined( 'GEOBLOCK_PRO_VERSION' ) ) {
+		add_action( 'admin_notices', 'geoblock_pro_active_notice' );
+		if ( function_exists( 'deactivate_plugins' ) ) {
+			deactivate_plugins( GEOBLOCK_PLUGIN_BASE );
+		}
+	}
+}
+add_action( 'plugins_loaded', 'geoblock_check_pro_active' );
+
+function geoblock_pro_active_notice() {
+	echo '<div class="notice notice-error"><p>';
+	echo wp_kses_post(
+		sprintf(
+			/* translators: %s: GeoBlock Pro plugin URL */
+			__( '<strong>WindCodex GeoBlock</strong> cannot be activated while <strong>GeoBlock Pro</strong> is active.', 'windcodex-geoblock' ),
+			'https://www.windcodex.com/geoblock/'
+		)
+	);
+	echo '</p></div>';
+}
+
+// --- Declare WooCommerce HPOS compatibility ------------------------------------
 
 add_action( 'before_woocommerce_init', function () {
 	if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
@@ -86,7 +112,7 @@ add_action( 'before_woocommerce_init', function () {
 	}
 } );
 
-// ─── Boot the plugin ──────────────────────────────────────────────────────────
+// --- Boot the plugin ----------------------------------------------------------
 
 function geoblock_init() {
 	if ( ! class_exists( 'WooCommerce' ) ) {
@@ -102,6 +128,7 @@ function geoblock_init() {
 	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-shortcodes.php';
 	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-compatibility.php';
 	require_once GEOBLOCK_PLUGIN_DIR . 'admin/class-geoblock-admin.php';
+	require_once GEOBLOCK_PLUGIN_DIR . 'admin/class-geoblock-notices.php';
 	require_once GEOBLOCK_PLUGIN_DIR . 'public/class-geoblock-public.php';
 
 	// Boot loader (registers all hooks).
@@ -111,10 +138,17 @@ function geoblock_init() {
 }
 add_action( 'plugins_loaded', 'geoblock_init', 20 );
 
-// ─── Activation / Deactivation ────────────────────────────────────────────────
+// --- Activation / Deactivation ------------------------------------------------
 
 register_activation_hook( __FILE__, 'geoblock_activate' );
 function geoblock_activate() {
+	if ( defined( 'GEOBLOCK_PRO_VERSION' ) ) {
+		deactivate_plugins( GEOBLOCK_PLUGIN_BASE );
+		set_transient( 'geoblock_free_activation_blocked', 1, 30 );
+		wp_safe_redirect( admin_url( 'plugins.php' ) );
+		exit;
+	}
+
 	if ( ! geoblock_has_woocommerce() ) {
 		if ( function_exists( 'deactivate_plugins' ) ) {
 			deactivate_plugins( GEOBLOCK_PLUGIN_BASE );
@@ -128,6 +162,11 @@ function geoblock_activate() {
 
 	// Store plugin version for future upgrade routines.
 	update_option( 'geoblock_version', GEOBLOCK_VERSION );
+
+	// Track first activation time for the review request notice.
+	if ( ! get_option( 'geoblock_activated_time' ) ) {
+		update_option( 'geoblock_activated_time', time() );
+	}
 
 	// Set default options on first activation.
 	if ( false === get_option( 'geoblock_settings' ) ) {

@@ -1,6 +1,6 @@
 <?php
 /**
- * Public — enqueues frontend styles for restriction notices
+ * Public - enqueues frontend styles for restriction notices
  * and any future public-facing JavaScript.
  *
  * @package GeoBlock_Country_Restrictions

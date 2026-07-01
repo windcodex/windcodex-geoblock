@@ -1,6 +1,6 @@
 <?php
 /**
- * Compatibility — ensures GeoBlock works correctly alongside popular
+ * Compatibility - ensures GeoBlock works correctly alongside popular
  * WordPress / WooCommerce plugins.
  *
  * Handled integrations:
@@ -47,7 +47,7 @@ class GeoBlock_Compatibility {
 		$this->init_speed_optimizer();
 	}
 
-	// ─── 1. Price Based on Country for WooCommerce ────────────────────────────
+	// --- 1. Price Based on Country for WooCommerce ----------------------------
 
 	/**
 	 * "Price Based on Country" (by Oscar Gare / woocommerce-price-based-country)
@@ -55,7 +55,7 @@ class GeoBlock_Compatibility {
 	 * per country/zone.
 	 *
 	 * In GeoBlock 'message' mode, we replace the price with our restriction
-	 * notice — we run at priority 5 so we win, and return early so PBOC's
+	 * notice - we run at priority 5 so we win, and return early so PBOC's
 	 * filter never fires on restricted products.
 	 *
 	 * In 'catalog_only' / 'hide' modes PBOC still runs normally because
@@ -85,7 +85,7 @@ class GeoBlock_Compatibility {
 			return $price_html;
 		}
 		if ( $this->restrictions->is_restricted( $product ) ) {
-			// Return empty — GeoBlock's own filter_price_html (priority 10) will
+			// Return empty - GeoBlock's own filter_price_html (priority 10) will
 			// also return '' and the restriction notice is shown by the summary hook.
 			// Returning '' here prevents PBOC modifying the price before we hide it.
 			return '';
@@ -93,7 +93,7 @@ class GeoBlock_Compatibility {
 		return $price_html;
 	}
 
-	// ─── 2. WPML ─────────────────────────────────────────────────────────────
+	// --- 2. WPML -------------------------------------------------------------
 
 	/**
 	 * WPML creates translated copies of each product with a different post ID.
@@ -132,14 +132,14 @@ class GeoBlock_Compatibility {
 		return $original_id ?: $product_id;
 	}
 
-	// ─── 3. WooCommerce Product Bundles ───────────────────────────────────────
+	// --- 3. WooCommerce Product Bundles ---------------------------------------
 
 	/**
 	 * WooCommerce Product Bundles adds a 'bundle' product type.
 	 *
 	 * Behaviour:
 	 * - If the BUNDLE product itself has a GeoBlock rule → restrict the whole bundle.
-	 * - Bundled child items are NOT checked individually — restricting a child
+	 * - Bundled child items are NOT checked individually - restricting a child
 	 *   item would silently break the bundle without any clear user-facing message.
 	 *   Store owners should apply rules to the bundle parent.
 	 *
@@ -154,7 +154,7 @@ class GeoBlock_Compatibility {
 
 		// Ensure our is_purchasable filter runs after WC Bundles sets up its own
 		// (WC Bundles uses priority 10; we run at 10 too, so WordPress calls them
-		// in registration order — ours comes after since Loader registers it after
+		// in registration order - ours comes after since Loader registers it after
 		// plugins_loaded. As a safety net we also hook at priority 15).
 		add_filter( 'woocommerce_bundle_is_purchasable', array( $this, 'bundle_purchasable' ), 15, 2 );
 	}
@@ -187,7 +187,7 @@ class GeoBlock_Compatibility {
 		return $purchasable;
 	}
 
-	// ─── 4. WooCommerce Subscriptions ─────────────────────────────────────────
+	// --- 4. WooCommerce Subscriptions -----------------------------------------
 
 	/**
 	 * WooCommerce Subscriptions adds 'subscription' and 'variable-subscription'
@@ -236,7 +236,7 @@ class GeoBlock_Compatibility {
 		return $purchasable;
 	}
 
-	// ─── 5. WP Rocket ─────────────────────────────────────────────────────────
+	// --- 5. WP Rocket ---------------------------------------------------------
 
 	/**
 	 * WP Rocket caches full HTML pages. Geolocation-dependent pages must NOT
@@ -245,7 +245,7 @@ class GeoBlock_Compatibility {
 	 *
 	 * Solutions applied:
 	 *  a) Exclude GeoBlock's geolocation AJAX action from WP Rocket's
-	 *     cache exclusions (not needed — AJAX is never cached by WP Rocket).
+	 *     cache exclusions (not needed - AJAX is never cached by WP Rocket).
 	 *  b) Set DONOTCACHEPAGE on single product pages so WP Rocket skips them.
 	 *  c) Add the page to WP Rocket's "never cache" list via filter.
 	 *
@@ -260,7 +260,7 @@ class GeoBlock_Compatibility {
 		}
 
 		// Tell WP Rocket not to cache individual product pages.
-		// This is safe — WP Rocket will still cache shop/category/home pages.
+		// This is safe - WP Rocket will still cache shop/category/home pages.
 		add_action( 'template_redirect', array( $this, 'rocket_disable_cache_on_product' ), 1 );
 
 		// Exclude GeoBlock AJAX from WP Rocket cache exclusions list (informational).
@@ -278,7 +278,7 @@ class GeoBlock_Compatibility {
 	}
 
 	/**
-	 * Hook exists for future use — WP Rocket already excludes admin-ajax.php
+	 * Hook exists for future use - WP Rocket already excludes admin-ajax.php
 	 * by default, so no additional URI exclusions are needed.
 	 *
 	 * @param  array $uris
@@ -290,7 +290,7 @@ class GeoBlock_Compatibility {
 		return $uris;
 	}
 
-	// ─── 6. Speed Optimizer by SiteGround ────────────────────────────────────
+	// --- 6. Speed Optimizer by SiteGround ------------------------------------
 
 	/**
 	 * SiteGround Speed Optimizer (formerly SG CachePress) offers both server-side

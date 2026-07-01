@@ -37,7 +37,7 @@ class GeoBlock_Admin {
 		add_submenu_page(
 			'woocommerce',
 			__( 'GeoBlock Settings', 'windcodex-geoblock' ),
-			__( 'GeoBlock Restrictions', 'windcodex-geoblock' ),
+			__( 'GeoBlock', 'windcodex-geoblock' ),
 			'manage_woocommerce',
 			'geoblock-settings',
 			array( $this, 'render_settings_page' )

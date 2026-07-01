@@ -1,6 +1,6 @@
 <?php
 /**
- * Restrictions Engine — evaluates whether a product is restricted
+ * Restrictions Engine - evaluates whether a product is restricted
  * for the current visitor's country.
  *
  * Rule format stored in post meta (_geoblock_rules):
@@ -32,7 +32,7 @@ class GeoBlock_Restrictions {
 		$this->geo = $geo;
 	}
 
-	// ─── Public API ───────────────────────────────────────────────────────────
+	// --- Public API -----------------------------------------------------------
 
 	/**
 	 * Returns true if the given product is restricted for the current visitor.
@@ -143,7 +143,7 @@ class GeoBlock_Restrictions {
 		}
 	}
 
-	// ─── Private helpers ──────────────────────────────────────────────────────
+	// --- Private helpers ------------------------------------------------------
 
 	/**
 	 * Core rule evaluation logic.

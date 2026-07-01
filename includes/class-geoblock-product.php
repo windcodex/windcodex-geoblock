@@ -1,6 +1,6 @@
 <?php
 /**
- * Product helper — thin wrapper used by the Admin class
+ * Product helper - thin wrapper used by the Admin class
  * to retrieve and display product-level restriction data.
  *
  * @package GeoBlock_Country_Restrictions

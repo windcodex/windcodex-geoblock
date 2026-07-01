@@ -1,6 +1,6 @@
 <?php
 /**
- * Hook Loader — registers all actions and filters for GeoBlock.
+ * Hook Loader - registers all actions and filters for GeoBlock.
  *
  * Centralising hook registration here makes the plugin easier to test,
  * debug with Query Monitor, and extend via child-plugins or PRO add-ons.
@@ -36,11 +36,11 @@ class GeoBlock_Loader {
 	}
 
 	/**
-	 * Private constructor — use instance().
+	 * Private constructor - use instance().
 	 */
 	private function __construct() {}
 
-	// ─── Hook registration ────────────────────────────────────────────────────
+	// --- Hook registration ----------------------------------------------------
 
 	private function define_hooks() {
 
@@ -49,6 +49,7 @@ class GeoBlock_Loader {
 		$product       = new GeoBlock_Product();
 		$frontend      = new GeoBlock_Frontend( $restrictions );
 		$admin         = new GeoBlock_Admin( $product );
+		$notices       = new GeoBlock_Notices();
 		$public        = new GeoBlock_Public( $restrictions );
 		$shortcodes    = new GeoBlock_Shortcodes( $restrictions );
 		$compatibility = new GeoBlock_Compatibility( $restrictions );
@@ -63,7 +64,12 @@ class GeoBlock_Loader {
 		$this->add_action( 'wp_ajax_geoblock_save_settings',  $admin, 'ajax_save_settings' );
 		$this->add_action( 'wp_ajax_geoblock_reset_settings', $admin, 'ajax_reset_settings' );
 		$this->add_filter( 'plugin_action_links_' . GEOBLOCK_PLUGIN_BASE, $admin, 'plugin_action_links' );
-		// Products list column — covers classic WP list table AND WooCommerce HPOS list.
+		// Notices: Pro upsell + review request (both inline, below header).
+		$this->add_action( 'geoblock_before_settings',             $notices, 'render_pro_notice',    10 );
+		$this->add_action( 'geoblock_before_settings',             $notices, 'render_review_notice', 20 );
+		$this->add_action( 'admin_enqueue_scripts',                $notices, 'localize_nonce' );
+		$this->add_action( 'wp_ajax_geoblock_dismiss_review',      $notices, 'ajax_dismiss' );
+		// Products list column - covers classic WP list table AND WooCommerce HPOS list.
 		$this->add_filter( 'manage_product_posts_columns',              $admin, 'add_restriction_column' );
 		$this->add_action( 'manage_product_posts_custom_column',        $admin, 'render_restriction_column', 10, 2 );
 		// HPOS / WooCommerce custom product table (wc_get_products list screen).
@@ -103,7 +109,7 @@ class GeoBlock_Loader {
 		$this->add_action( 'wp_footer', $geo, 'maybe_render_debug_toolbar' );
 	}
 
-	// ─── Helpers ──────────────────────────────────────────────────────────────
+	// --- Helpers --------------------------------------------------------------
 
 	public function add_action( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) {
 		$this->actions[] = compact( 'hook', 'component', 'callback', 'priority', 'accepted_args' );

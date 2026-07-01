@@ -1,6 +1,6 @@
 <?php
 /**
- * Uninstall — runs when the plugin is deleted from the WordPress admin.
+ * Uninstall - runs when the plugin is deleted from the WordPress admin.
  * Removes all plugin options and post meta created by GeoBlock.
  *
  * This file is called by WordPress directly, NOT via include.
@@ -13,8 +13,8 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-// ── Clear transient cache ─────────────────────────────────────────────────────
-// Transients are prefixed with 'geoblock_country_' — delete them via SQL
+// -- Clear transient cache -----------------------------------------------------
+// Transients are prefixed with 'geoblock_country_' - delete them via SQL
 // since there's no native bulk transient deletion API.
 global $wpdb;
 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

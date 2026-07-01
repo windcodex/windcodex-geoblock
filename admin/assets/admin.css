@@ -838,3 +838,217 @@
 .gg-col-icon {
 	font-style: normal;
 }
+
+/* ── Header card inner layout ────────────────────────────────── */
+.gg-header-card-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+}
+
+/* ── Help button & dropdown ──────────────────────────────────── */
+.gg-help-wrap {
+	position: relative;
+	flex-shrink: 0;
+}
+.gg-help-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 5px 13px;
+	border-radius: 7px;
+	border: 1.5px solid var(--gg-accent);
+	background: #fff;
+	color: var(--gg-accent);
+	font-size: 14px;
+	font-weight: 600;
+	font-family: inherit;
+	line-height: 1;
+	cursor: pointer;
+	transition: border-color .15s, color .15s, background .15s;
+	white-space: nowrap;
+}
+.gg-help-btn .dashicons {
+	font-size: 18px;
+	width: 18px;
+	height: 18px;
+}
+.gg-help-btn:hover,
+.gg-help-btn.is-open {
+	border-color: var(--gg-accent);
+	color: var(--gg-accent);
+	background: var(--gg-accent-light);
+}
+.gg-help-dropdown {
+	position: absolute;
+	top: calc(100% + 8px);
+	right: 0;
+	background: #fff;
+	border: 1.5px solid var(--gg-border);
+	border-radius: var(--gg-radius-sm);
+	box-shadow: 0 4px 20px rgba(0,0,0,.12);
+	min-width: 200px;
+	z-index: 9999;
+	overflow: hidden;
+}
+.gg-help-item {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 14px;
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--gg-text);
+	text-decoration: none;
+	border-bottom: 1px solid var(--gg-border);
+	transition: background .12s, color .12s;
+}
+.gg-help-item:last-child { border-bottom: none; }
+.gg-help-item:hover {
+	background: var(--gg-accent-light);
+	color: var(--gg-accent);
+}
+.gg-help-item-icon {
+	font-size: 16px;
+	width: 16px;
+	height: 16px;
+	flex-shrink: 0;
+	color: var(--gg-text-3);
+}
+.gg-help-item:hover .gg-help-item-icon { color: var(--gg-accent); }
+
+/* ── Notices ────────────────────────────────────────────────────── */
+/* Self-contained CSS variables — review notice renders via         */
+/* admin_notices outside .gg-wrap; pro banner is inline inside it.  */
+.gg-pro-notice,
+.gg-review-notice {
+	--gg-accent:       #6347EB;
+	--gg-brand:        #2E266D;
+	--gg-accent-light: #F3F0FF;
+	--gg-border:       #E2E8F0;
+	--gg-text:         #0F172A;
+	--gg-text-2:       #475569;
+	--gg-radius-sm:    6px;
+}
+
+/* ── Pro upsell banner ──────────────────────────────────────────── */
+.gg-pro-notice {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	padding: 14px 20px;
+	margin: 0 0 20px;
+	background: linear-gradient(135deg, var(--gg-brand) 0%, var(--gg-accent) 100%);
+	border-left: none;
+	border-radius: 8px;
+}
+.gg-pro-notice-text {
+	font-size: 13px;
+	color: rgba(255, 255, 255, .88);
+	line-height: 1.5;
+	margin: 0;
+}
+.gg-pro-notice-text strong {
+	color: #fff;
+	font-size: 14px;
+}
+.gg-pro-notice-cta {
+	display: inline-flex;
+	align-items: center;
+	padding: 7px 18px;
+	border-radius: var(--gg-radius-sm);
+	background: #fff;
+	color: var(--gg-accent) !important;
+	font-size: 12px;
+	font-weight: 700;
+	text-decoration: none !important;
+	white-space: nowrap;
+	flex-shrink: 0;
+	transition: background .15s, color .15s;
+}
+.gg-pro-notice-cta:hover {
+	background: var(--gg-accent-light);
+	color: var(--gg-brand) !important;
+}
+
+/* ── Review request notice ──────────────────────────────────────── */
+.gg-review-notice.notice {
+	border: 2px solid var(--gg-accent) !important;
+	border-radius: 8px;
+	background: var(--gg-accent-light);
+	padding: 16px 20px 14px;
+	margin-bottom: 16px;
+}
+.gg-review-notice-title {
+	font-size: 16px;
+	font-weight: 700;
+	color: var(--gg-brand);
+	margin: 0 0 6px;
+}
+.gg-review-notice-body {
+	font-size: 13px;
+	color: var(--gg-text-2);
+	line-height: 1.6;
+	margin: 0 0 14px;
+	max-width: 680px;
+}
+.gg-review-notice-actions {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 8px;
+	padding-top: 12px;
+	border-top: 1px solid rgba(99, 71, 235, .15);
+	margin: 0;
+}
+.gg-review-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	border-radius: var(--gg-radius-sm);
+	font-size: 13px;
+	font-weight: 600;
+	font-family: inherit;
+	text-decoration: none;
+	cursor: pointer;
+	line-height: 1.4;
+	transition: background .12s, color .12s, border-color .12s;
+}
+.gg-review-btn-primary {
+	padding: 8px 18px;
+	background: linear-gradient(135deg, var(--gg-brand) 0%, var(--gg-accent) 100%);
+	color: #fff !important;
+	border: none;
+	font-size: 13px;
+	font-weight: 700;
+	text-decoration: none !important;
+}
+.gg-review-btn-primary:hover {
+	background: linear-gradient(135deg, #241D5C 0%, #5238D4 100%);
+	color: #fff !important;
+}
+.gg-review-btn-secondary {
+	padding: 7px 14px;
+	background: #fff;
+	color: var(--gg-text-2) !important;
+	border: 1.5px solid var(--gg-border);
+}
+.gg-review-btn-secondary:hover {
+	background: #fff;
+	color: var(--gg-accent) !important;
+	border-color: var(--gg-accent);
+}
+.gg-review-btn-link {
+	padding: 6px 8px;
+	background: transparent;
+	color: var(--gg-text-2);
+	border: 1.5px solid transparent;
+}
+.gg-review-btn-link:hover {
+	color: var(--gg-accent);
+	text-decoration: underline;
+}
+

@@ -1,6 +1,6 @@
 <?php
 /**
- * Frontend — applies restriction rules to the WooCommerce catalog,
+ * Frontend - applies restriction rules to the WooCommerce catalog,
  * single product pages, and cart/checkout.
  *
  * Restriction behaviour per mode:
@@ -34,11 +34,11 @@ class GeoBlock_Frontend {
 		$this->restrictions = $restrictions;
 	}
 
-	// ─── 1. Catalog visibility (loops / search / widgets) ────────────────────
+	// --- 1. Catalog visibility (loops / search / widgets) --------------------
 
 	/**
 	 * Hide restricted products from shop loops, category pages, and search.
-	 * Only applies in 'hide' mode — in other modes the product stays visible
+	 * Only applies in 'hide' mode - in other modes the product stays visible
 	 * in the catalog but is non-purchasable on the product page.
 	 *
 	 * @param  bool $visible
@@ -47,7 +47,7 @@ class GeoBlock_Frontend {
 	 */
 	public function filter_product_visibility( bool $visible, int $product_id ): bool {
 		if ( ! $visible ) {
-			return false; // Already hidden — don't interfere.
+			return false; // Already hidden - don't interfere.
 		}
 		$mode = $this->restrictions->get_restriction_mode();
 		// Both 'hide' and 'catalog_only' remove the product from loops/search.
@@ -61,12 +61,12 @@ class GeoBlock_Frontend {
 		return $visible;
 	}
 
-	// ─── 2. Single product page block ────────────────────────────────────────
+	// --- 2. Single product page block ----------------------------------------
 
 	/**
 	 * Block or redirect restricted product pages BEFORE any output is sent.
 	 *
-	 * Runs on template_redirect (priority 10 — before WC outputs anything).
+	 * Runs on template_redirect (priority 10 - before WC outputs anything).
 	 *
 	 * Behaviour depends on restriction mode + whether a redirect URL is set:
 	 *
@@ -89,13 +89,13 @@ class GeoBlock_Frontend {
 		$mode         = $this->restrictions->get_restriction_mode();
 		$redirect_url = $this->restrictions->get_redirect_url();
 
-		// ── Always redirect if a redirect URL is configured ──
+		// -- Always redirect if a redirect URL is configured --
 		if ( $redirect_url ) {
 			wp_safe_redirect( esc_url_raw( $redirect_url ), 302 );
 			exit;
 		}
 
-		// ── 'hide' mode with no redirect → 404 ──
+		// -- 'hide' mode with no redirect → 404 --
 		if ( 'hide' === $mode ) {
 			global $wp_query;
 			$wp_query->set_404();
@@ -115,12 +115,12 @@ class GeoBlock_Frontend {
 			exit;
 		}
 
-		// ── 'catalog_only' mode — allow the direct URL to load, but block purchase ──
+		// -- 'catalog_only' mode - allow the direct URL to load, but block purchase --
 		// 'nonpurchasable', 'message', and 'catalog_only' all allow page to load;
 		// the hooks below handle removing Add to Cart and showing a restriction notice.
 	}
 
-	// ─── 3. Purchasability (Add to Cart button) ───────────────────────────────
+	// --- 3. Purchasability (Add to Cart button) -------------------------------
 
 	/**
 	 * Disable Add to Cart for restricted products across all non-hide modes.
@@ -140,26 +140,26 @@ class GeoBlock_Frontend {
 		}
 
 		if ( ! $this->restrictions->is_restricted( $product ) ) {
-			return $purchasable; // Not restricted — leave untouched.
+			return $purchasable; // Not restricted - leave untouched.
 		}
 
-		// ── catalog_only mode ──────────────────────────────────────────────
+		// -- catalog_only mode ----------------------------------------------
 		if ( 'catalog_only' === $mode ) {
 			$settings            = (array) get_option( 'geoblock_settings', array() );
 			$catalog_purchasable = $settings['catalog_purchasable'] ?? 'no';
 			if ( 'yes' === $catalog_purchasable ) {
-				return $purchasable; // Toggle ON — allow purchase via direct URL.
+				return $purchasable; // Toggle ON - allow purchase via direct URL.
 			}
 		}
 
-		// ── message mode: block all product types including variable/variation.
+		// -- message mode: block all product types including variable/variation.
 		// The variation form + ATC button are hidden via JS injected in wp_footer.
 		// Server-side validation catches any bypass attempts.
 		if ( 'message' === $mode ) {
 			return false;
 		}
 
-		// ── catalog_only mode (purchase blocked): keep variable/variation,
+		// -- catalog_only mode (purchase blocked): keep variable/variation,
 		// bundle, and variable-subscription products "purchasable" so their
 		// selection forms still render. The actual cart add is blocked by
 		// woocommerce_add_to_cart_validation (and the compatibility class
@@ -172,7 +172,7 @@ class GeoBlock_Frontend {
 		return false;
 	}
 
-	// ─── 4. Add-to-cart server-side validation (API / AJAX safety net) ────────
+	// --- 4. Add-to-cart server-side validation (API / AJAX safety net) --------
 
 	/**
 	 * Prevent restricted products from being added to the cart even via
@@ -213,12 +213,12 @@ class GeoBlock_Frontend {
 		return false;
 	}
 
-	// ─── 5. Price HTML ────────────────────────────────────────────────────────
+	// --- 5. Price HTML --------------------------------------------------------
 
 	/**
 	 * In 'message' mode: remove the price entirely on restricted products.
 	 * The message itself is shown once by maybe_show_restriction_notice().
-	 * We return empty string here so the price area is blank — no duplication.
+	 * We return empty string here so the price area is blank - no duplication.
 	 *
 	 * @param  string      $price_html
 	 * @param  WC_Product  $product
@@ -228,19 +228,19 @@ class GeoBlock_Frontend {
 		if ( 'message' !== $this->restrictions->get_restriction_mode() ) {
 			return $price_html;
 		}
-		// Only hide the price on the single product page — the price should
+		// Only hide the price on the single product page - the price should
 		// remain visible on shop/category loop grid cards so customers can
 		// browse normally. The ATC is hidden on the product page separately.
 		if ( ! is_product() ) {
 			return $price_html;
 		}
 		if ( $this->restrictions->is_restricted( $product ) ) {
-			return ''; // Hide price — message is displayed by the notice hook below.
+			return ''; // Hide price - message is displayed by the notice hook below.
 		}
 		return $price_html;
 	}
 
-	// ─── 6. Cart validation — remove restricted items already in cart ──────────
+	// --- 6. Cart validation - remove restricted items already in cart ----------
 
 	/**
 	 * Fires on woocommerce_check_cart_items (cart page + checkout page load).
@@ -259,7 +259,7 @@ class GeoBlock_Frontend {
 			return;
 		}
 
-		// catalog_only with "Allow purchase" ON — cart is allowed.
+		// catalog_only with "Allow purchase" ON - cart is allowed.
 		if ( 'catalog_only' === $mode ) {
 			$settings            = (array) get_option( 'geoblock_settings', array() );
 			$catalog_purchasable = $settings['catalog_purchasable'] ?? 'no';
@@ -302,7 +302,7 @@ class GeoBlock_Frontend {
 	}
 
 	/**
-	 * Fires on woocommerce_checkout_process — last-line-of-defence before order
+	 * Fires on woocommerce_checkout_process - last-line-of-defence before order
 	 * is created. Blocks the order if any cart item is restricted.
 	 * This catches cases where check_cart_items_for_restrictions was bypassed
 	 * (e.g. express checkout, REST API order creation).
@@ -334,12 +334,12 @@ class GeoBlock_Frontend {
 					esc_html__( 'Your cart contains a product that is not available in your country. Please remove it before placing your order.', 'windcodex-geoblock' ),
 					'error'
 				);
-				return; // One notice is enough — order is blocked.
+				return; // One notice is enough - order is blocked.
 			}
 		}
 	}
 
-	// ─── 7. Single product restriction notice ────────────────────────────────
+	// --- 7. Single product restriction notice --------------------------------
 
 	/**
 	 * Show ONE restriction notice on the single product page.
@@ -349,7 +349,7 @@ class GeoBlock_Frontend {
 	 * - 'hide' mode           → never reaches here (page is already 404'd above).
 	 *
 	 * Hooked at priority 25 (after title/price, before ATC button).
-	 * This is the ONLY place the message is rendered — no duplication.
+	 * This is the ONLY place the message is rendered - no duplication.
 	 */
 	public function maybe_show_restriction_notice(): void {
 		global $product;
@@ -371,14 +371,14 @@ class GeoBlock_Frontend {
 		}
 
 		if ( 'catalog_only' === $mode ) {
-			// If "Allow purchase via direct URL" is ON — product is purchasable,
+			// If "Allow purchase via direct URL" is ON - product is purchasable,
 			// so show no restriction notice at all.
 			$settings            = (array) get_option( 'geoblock_settings', array() );
 			$catalog_purchasable = $settings['catalog_purchasable'] ?? 'no';
 			if ( 'yes' === $catalog_purchasable ) {
 				return;
 			}
-			// Purchase is blocked — show the generic notice.
+			// Purchase is blocked - show the generic notice.
 			echo '<div class="woocommerce-info geoblock-restriction-notice" role="alert">'
 				. esc_html__( 'This product is not available for purchase in your country.', 'windcodex-geoblock' )
 				. '</div>';
@@ -390,21 +390,21 @@ class GeoBlock_Frontend {
 			. wp_kses_post( $this->restrictions->get_restriction_message() )
 			. '</div>';
 	}
-	// ─── 8. Inline CSS — hide variation form + ATC in message mode ──────────
+	// --- 8. Inline CSS - hide variation form + ATC in message mode ----------
 
 	/**
 	 * On a restricted variable product page in 'message' mode, inject a small
 	 * inline CSS rule to hide the variation form and Add to Cart button.
 	 *
 	 * We cannot rely solely on woocommerce_is_purchasable returning false for
-	 * variable products — WooCommerce removes the entire dropdown form when the
+	 * variable products - WooCommerce removes the entire dropdown form when the
 	 * parent returns false. Instead we return false (which WC handles gracefully
 	 * for simple products) AND inject CSS for variable products so both the
 	 * form and the button are visually hidden. Server-side validation blocks
 	 * any bypass attempt.
 	 */
 	public function maybe_inject_restriction_css(): void {
-		// Use global $product — this fires in wp_footer, WC has set it up by then.
+		// Use global $product - this fires in wp_footer, WC has set it up by then.
 		global $product;
 
 		if ( ! is_product() ) {
@@ -415,7 +415,7 @@ class GeoBlock_Frontend {
 			return;
 		}
 
-		// Only variable products need CSS — simple products are handled by
+		// Only variable products need CSS - simple products are handled by
 		// filter_purchasable returning false (WC removes the ATC button natively).
 		if ( ! $product->is_type( 'variable' ) ) {
 			return;
