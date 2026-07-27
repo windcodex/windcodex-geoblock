@@ -1,7 +1,7 @@
 === WindCodex GeoBlock – WooCommerce Country Restriction & Geo Blocking ===
 Contributors: windcodex
 Tags: woocommerce, geo blocking, country restriction, geolocation, block country
-Requires at least: 5.8
+Requires at least: 6.9
 Tested up to: 7.0
 Stable tag: 1.0.1
 Requires PHP: 7.4
