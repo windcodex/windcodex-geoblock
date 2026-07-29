@@ -1,425 +1,486 @@
-﻿# GeoBlock Country Restrictions for WooCommerce
-# Copyright (C) 2026 Dhimahi Solutions
-# This file is distributed under the same license as the GeoBlock Country Restrictions plugin.
-# Dhimahi Solutions <hello@dhimahisolutions.com>, 2026.
-#
+# Copyright (C) 2026 WindCodex
+# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: GeoBlock Country Restrictions for WooCommerce 1.0.0\\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/windcodex-geoblock\\n"
-"POT-Creation-Date: 2026-03-31 09:36+0000\\n"
-"MIME-Version: 1.0\\n"
-"Content-Type: text/plain; charset=UTF-8\\n"
-"Content-Transfer-Encoding: 8bit\\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\\n"
-"Language-Team: LANGUAGE <LL@li.org>\\n"
-"Language: \\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\\n"
-"X-Generator: Dhimahi Solutions POT Generator 1.0\\n"
-"X-Domain: windcodex-geoblock\\n"
+"Project-Id-Version: WindCodex GeoBlock 1.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/windcodex-geoblock\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-29T05:59:52+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: windcodex-geoblock\n"
 
-
-#: admin/views/product-meta-box.php
-msgid "Search by name or 2-letter code. Leave empty to remove all restrictions from this product."
+#. Plugin Name of the plugin
+#: windcodex-geoblock.php
+msgid "WindCodex GeoBlock"
 msgstr ""
 
-#: admin/class-geoblock-admin.php
-msgid "Search countries..."
+#. Description of the plugin
+#: windcodex-geoblock.php
+msgid "Restrict WooCommerce products by country using geolocation. Hide products, block purchases, or show a custom message per product. No API key required."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Fix this in <a href=\\"%s\\">WooCommerce &rarr; Settings &rarr; General</a> by setting \\"Default customer location\\" to \\"Geolocate\\"."
+#. Author of the plugin
+#: windcodex-geoblock.php
+msgid "WindCodex"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Hide from catalog, allow direct URL"
+#. Author URI of the plugin
+#: windcodex-geoblock.php
+msgid "https://www.windcodex.com"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Debug Mode"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Advanced"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Settings reset to defaults."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Setup Guide"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Below title and star rating"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
+#: admin/class-geoblock-admin.php:39
 msgid "GeoBlock Settings"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Shown to customers in restricted countries"
+#: admin/class-geoblock-admin.php:40
+#: admin/views/settings-page.php:28
+msgid "GeoBlock"
 msgstr ""
 
-#: includes/class-geoblock-frontend.php
-msgid "Your cart contains a product that is not available in your country. Please remove it before placing your order."
+#: admin/class-geoblock-admin.php:94
+msgid "You do not have permission to access this page."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Use the GeoBlock meta box on the product edit screen to add per-product country rules."
+#: admin/class-geoblock-admin.php:106
+#: admin/class-geoblock-admin.php:132
+#: admin/class-geoblock-notices.php:102
+msgid "Permission denied."
 msgstr ""
 
-#: admin/class-geoblock-admin.php admin/views/product-meta-box.php
-msgid "Only customers from %s can purchase this product."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Below the short description"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "GeoBlock Country Restrictions"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Restriction Mode"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Force Geolocation"
-msgstr ""
-
-#: includes/class-geoblock-frontend.php includes/class-geoblock-shortcodes.php
-msgid "This product is not available for purchase in your country."
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Settings reset to defaults!"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Remove from shop, search, and category pages entirely. Direct product URL returns 404."
-msgstr ""
-
-#: admin/class-geoblock-admin.php admin/views/product-meta-box.php
-msgid "Customers from %s cannot purchase this product."
-msgstr ""
-
-#: windcodex-geoblock.php
-msgid "<strong>GeoBlock Country Restrictions</strong> requires <a href=\\"%s\\">WooCommerce</a> to be installed and active."
-msgstr ""
-
-#: windcodex-geoblock.php admin/class-geoblock-admin.php admin/views/settings-page.php includes/class-geoblock-frontend.php includes/class-geoblock-restrictions.php
-msgid "Sorry, this product is not available in your country."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "After Title"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Logged-in customers with a saved shipping or billing address will still be detected correctly."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Geolocation Active"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Before SKU and category info"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "GeoBlock Restrictions"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Settings"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
+#: admin/class-geoblock-admin.php:116
+#: admin/class-geoblock-admin.php:261
 msgid "Please enter a redirect URL before enabling redirect."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "WooCommerce Geolocation is not enabled."
+#: admin/class-geoblock-admin.php:121
+msgid "Settings saved successfully."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "General"
+#: admin/class-geoblock-admin.php:136
+#: admin/views/settings-page.php:13
+#: includes/class-geoblock-frontend.php:210
+#: includes/class-geoblock-restrictions.php:79
+#: windcodex-geoblock.php:179
+msgid "Sorry, this product is not available in your country."
 msgstr ""
 
-#: admin/views/product-meta-box.php
-msgid "Include"
+#: admin/class-geoblock-admin.php:141
+msgid "Settings reset to defaults."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Control product visibility and purchasability based on your customers' country."
+#: admin/class-geoblock-admin.php:151
+msgid "GeoBlock - Country Restrictions"
 msgstr ""
 
-#: admin/class-geoblock-admin.php
+#: admin/class-geoblock-admin.php:258
+msgid "Saving..."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:259
+msgid "Settings saved!"
+msgstr ""
+
+#: admin/class-geoblock-admin.php:260
+msgid "Could not save. Please try again."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:262
+msgid "Resetting..."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:263
+msgid "Settings reset to defaults!"
+msgstr ""
+
+#: admin/class-geoblock-admin.php:264
+msgid "Reset all settings to their default values? This cannot be undone."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:265
+msgid "Could not reset. Please try again."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:266
+msgid "Search countries..."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:267
+msgid "No countries found."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:268
+msgid "No restrictions - product available to all countries."
+msgstr ""
+
+#. translators: %s: country list
+#. translators: %s: country names
+#: admin/class-geoblock-admin.php:270
+#: admin/views/product-meta-box.php:112
+#, php-format
+msgid "Customers from %s cannot purchase this product."
+msgstr ""
+
+#. translators: %s: country list
+#. translators: %s: country names
+#: admin/class-geoblock-admin.php:272
+#: admin/views/product-meta-box.php:106
+#, php-format
+msgid "Only customers from %s can purchase this product."
+msgstr ""
+
+#: admin/class-geoblock-admin.php:292
+msgid "GeoBlock - Country Restriction"
+msgstr ""
+
+#: admin/class-geoblock-admin.php:294
+msgid "Geo Restriction"
+msgstr ""
+
+#. translators: %d: number of countries
+#: admin/class-geoblock-admin.php:350
+#, php-format
 msgid "Only %d country"
 msgid_plural "Only %d countries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/views/settings-page.php
-msgid "Visible in shop and search. On the product page, price and Add to Cart are replaced with your custom message."
-msgstr ""
-
-#: admin/views/product-meta-box.php
-msgid "Exclude"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "No restrictions - product available to all countries."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Message Position"
-msgstr ""
-
-#: admin/views/product-meta-box.php
-msgid "Restrict these countries"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Before Product Meta"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Above the product name"
-msgstr ""
-
-#: admin/views/product-meta-box.php
-msgid "Allow ONLY these countries"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Always use IP-based geolocation"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "You do not have permission to access this page."
-msgstr ""
-
-#: includes/class-geoblock-frontend.php
-msgid "This product is not available in your country."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Go to the General tab and choose how restricted products behave across your entire store."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Test with Debug Mode"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Resetting..."
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Settings saved!"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "GeoBlock - Country Restrictions"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
+#. translators: %d: number of countries
+#: admin/class-geoblock-admin.php:358
+#, php-format
 msgid "Blocks %d country"
 msgid_plural "Blocks %d countries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: admin/views/settings-page.php
-msgid "Advanced Settings"
+#: admin/class-geoblock-admin.php:378
+msgid "Settings"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Save Settings"
+#: admin/class-geoblock-notices.php:37
+msgid "GeoBlock Pro"
 msgstr ""
 
-#: admin/views/product-meta-box.php
-msgid "Rule Type"
+#: admin/class-geoblock-notices.php:38
+msgid "— Bulk category rules, payment gateway restrictions by country, variation-level rules, and analytics dashboard."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "After Description"
+#: admin/class-geoblock-notices.php:41
+msgid "Explore GeoBlock Pro →"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Reset to Defaults"
+#: admin/class-geoblock-notices.php:71
+msgid "⭐ Enjoying GeoBlock?"
 msgstr ""
 
-#: admin/class-geoblock-admin.php
-msgid "Settings saved successfully."
+#: admin/class-geoblock-notices.php:74
+msgid "You've been using GeoBlock for 7 days — we hope it's saving you from failed deliveries and unwanted orders."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "By default GeoBlock uses a logged-in customer saved shipping address for maximum accuracy. Enable this to always use IP detection instead - useful when shipping addresses may not reflect the customer physical location."
+#: admin/class-geoblock-notices.php:76
+msgid "If it's been helpful, a quick review on WordPress.org takes less than 2 minutes and helps thousands of other store owners find the plugin."
 msgstr ""
 
-#: admin/class-geoblock-admin.php
-msgid "No countries found."
+#: admin/class-geoblock-notices.php:83
+msgid "⭐ Leave a Review"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Shows a bar at the bottom of every frontend page with the detected country and IP address. Visible only to shop managers and administrators."
+#: admin/class-geoblock-notices.php:86
+msgid "I already did ✓"
 msgstr ""
 
-#: admin/views/product-meta-box.php
-msgid "No restrictions set - this product is available to customers in all countries."
+#: admin/class-geoblock-notices.php:89
+msgid "Maybe Later"
 msgstr ""
 
-#: admin/class-geoblock-admin.php
-msgid "Reset all settings to their default values? This cannot be undone."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Admin-only toolbar in site footer"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Could not save. Please try again."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Enable debug toolbar under Advanced tab to confirm the detected country in real time."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Where to display the restriction message on the product page"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Saving..."
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Permission denied."
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Redirect restricted visitors instead of showing 404"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "Edit any product"
-msgstr ""
-
-#: admin/class-geoblock-admin.php
-msgid "Geo Restriction"
-msgstr ""
-
-#: admin/views/settings-page.php
-msgid "WooCommerce only downloads the MaxMind database when geolocation is enabled. Without it, guests fall back to the store base country and restrictions will not apply to them."
-msgstr ""
-
-#: admin/views/product-meta-box.php
-msgid "Countries"
-msgstr ""
-
-#: admin/views/product-meta-box.php
+#: admin/views/product-meta-box.php:43
 msgid "Define which countries can or cannot purchase this product. Leave empty for no restrictions."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Quick Setup Guide"
+#: admin/views/product-meta-box.php:50
+msgid "Rule Type"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Restriction Settings"
+#: admin/views/product-meta-box.php:59
+msgid "Exclude"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Geolocation Inactive"
+#: admin/views/product-meta-box.php:60
+msgid "Restrict these countries"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Hidden from shop and search pages, but the product URL still loads. Useful for wholesale or private distribution."
+#: admin/views/product-meta-box.php:69
+msgid "Include"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Before Title"
+#: admin/views/product-meta-box.php:70
+msgid "Allow ONLY these countries"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Restriction Message"
+#: admin/views/product-meta-box.php:78
+msgid "Countries"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Developer and debugging options."
+#: admin/views/product-meta-box.php:95
+msgid "Search by name or 2-letter code. Leave empty to remove all restrictions from this product."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Always use IP detection, ignore shipping address"
+#: admin/views/product-meta-box.php:122
+msgid "No restrictions set - this product is available to customers in all countries."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Show restriction message"
+#: admin/views/settings-page.php:31
+#: admin/views/settings-page.php:103
+#: admin/views/settings-page.php:104
+msgid "General"
 msgstr ""
 
-#: admin/views/settings-page.php
+#: admin/views/settings-page.php:36
+msgid "Help"
+msgstr ""
+
+#: admin/views/settings-page.php:41
+msgid "Documentation"
+msgstr ""
+
+#: admin/views/settings-page.php:45
+msgid "Submit a Review"
+msgstr ""
+
+#: admin/views/settings-page.php:49
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: admin/views/settings-page.php:84
+msgid "WooCommerce Geolocation is not enabled."
+msgstr ""
+
+#: admin/views/settings-page.php:86
+msgid "Logged-in customers with a saved shipping or billing address will still be detected correctly."
+msgstr ""
+
+#: admin/views/settings-page.php:87
 msgid "Guest visitors and logged-in customers without a saved address rely on IP-based detection via the MaxMind GeoLite2 database."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Enable debug toolbar"
+#: admin/views/settings-page.php:88
+msgid "WooCommerce only downloads the MaxMind database when geolocation is enabled. Without it, guests fall back to the store base country and restrictions will not apply to them."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Choose how restricted products behave on your store"
+#. translators: %s: WooCommerce General Settings URL
+#: admin/views/settings-page.php:93
+#, php-format
+msgid "Fix this in <a href=\"%s\">WooCommerce &rarr; Settings &rarr; General</a> by setting \"Default customer location\" to \"Geolocate\"."
 msgstr ""
 
-#: admin/class-geoblock-admin.php
-msgid "GeoBlock - Country Restriction"
+#: admin/views/settings-page.php:106
+#: admin/views/settings-page.php:107
+msgid "Advanced"
 msgstr ""
 
-#: includes/class-geoblock-frontend.php
-msgid "\\"%s\\" has been removed from your cart as it is not available in your country."
+#: admin/views/settings-page.php:120
+msgid "Restriction Settings"
 msgstr ""
 
-#: admin/views/settings-page.php
+#: admin/views/settings-page.php:121
 msgid "How restricted products behave across your store."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "When enabled, restricted visitors who reach the product directly can still purchase it. By default, purchase is blocked."
+#: admin/views/settings-page.php:126
+msgid "Toggle Restriction Settings section"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Send restricted visitors to a custom URL when they access a product page directly."
+#: admin/views/settings-page.php:135
+msgid "Restriction Mode"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Shown on the product page when restricted. HTML is allowed."
+#: admin/views/settings-page.php:136
+msgid "Choose how restricted products behave on your store"
 msgstr ""
 
-#: admin/views/settings-page.php
+#: admin/views/settings-page.php:146
 msgid "Hide completely"
 msgstr ""
 
-#: admin/views/settings-page.php
+#: admin/views/settings-page.php:147
+msgid "Remove from shop, search, and category pages entirely. Direct product URL returns 404."
+msgstr ""
+
+#: admin/views/settings-page.php:167
+msgid "Redirect restricted visitors instead of showing 404"
+msgstr ""
+
+#: admin/views/settings-page.php:168
+msgid "Send restricted visitors to a custom URL when they access a product page directly."
+msgstr ""
+
+#: admin/views/settings-page.php:187
+msgid "Hide from catalog, allow direct URL"
+msgstr ""
+
+#: admin/views/settings-page.php:188
+msgid "Hidden from shop and search pages, but the product URL still loads. Useful for wholesale or private distribution."
+msgstr ""
+
+#: admin/views/settings-page.php:208
 msgid "Allow purchase via direct URL"
 msgstr ""
 
-#: admin/class-geoblock-admin.php
-msgid "Could not reset. Please try again."
+#: admin/views/settings-page.php:209
+msgid "When enabled, restricted visitors who reach the product directly can still purchase it. By default, purchase is blocked."
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "GeoBlock"
+#: admin/views/settings-page.php:220
+msgid "Show restriction message"
 msgstr ""
 
-#: includes/class-geoblock-frontend.php
+#: admin/views/settings-page.php:221
+msgid "Visible in shop and search. On the product page, price and Add to Cart are replaced with your custom message."
+msgstr ""
+
+#: admin/views/settings-page.php:232
+msgid "Restriction Message"
+msgstr ""
+
+#: admin/views/settings-page.php:233
+msgid "Shown to customers in restricted countries"
+msgstr ""
+
+#: admin/views/settings-page.php:242
+msgid "Shown on the product page when restricted. HTML is allowed."
+msgstr ""
+
+#: admin/views/settings-page.php:250
+msgid "Message Position"
+msgstr ""
+
+#: admin/views/settings-page.php:251
+msgid "Where to display the restriction message on the product page"
+msgstr ""
+
+#: admin/views/settings-page.php:267
+msgid "Before Title"
+msgstr ""
+
+#: admin/views/settings-page.php:268
+msgid "Above the product name"
+msgstr ""
+
+#: admin/views/settings-page.php:272
+msgid "After Title"
+msgstr ""
+
+#: admin/views/settings-page.php:273
+msgid "Below title and star rating"
+msgstr ""
+
+#: admin/views/settings-page.php:277
+msgid "After Description"
+msgstr ""
+
+#: admin/views/settings-page.php:278
+msgid "Below the short description"
+msgstr ""
+
+#: admin/views/settings-page.php:282
+msgid "Before Product Meta"
+msgstr ""
+
+#: admin/views/settings-page.php:283
+msgid "Before SKU and category info"
+msgstr ""
+
+#: admin/views/settings-page.php:319
+msgid "Advanced Settings"
+msgstr ""
+
+#: admin/views/settings-page.php:320
+msgid "Developer and debugging options."
+msgstr ""
+
+#: admin/views/settings-page.php:327
+msgid "Force Geolocation"
+msgstr ""
+
+#: admin/views/settings-page.php:328
+msgid "Always use IP detection, ignore shipping address"
+msgstr ""
+
+#: admin/views/settings-page.php:344
+msgid "Always use IP-based geolocation"
+msgstr ""
+
+#: admin/views/settings-page.php:345
+msgid "By default GeoBlock uses a logged-in customer saved shipping address for maximum accuracy. Enable this to always use IP detection instead -useful when shipping addresses may not reflect the customer physical location."
+msgstr ""
+
+#: admin/views/settings-page.php:354
+msgid "Debug Mode"
+msgstr ""
+
+#: admin/views/settings-page.php:355
+msgid "Admin-only toolbar in site footer"
+msgstr ""
+
+#: admin/views/settings-page.php:371
+msgid "Enable debug toolbar"
+msgstr ""
+
+#: admin/views/settings-page.php:372
+msgid "Shows a bar at the bottom of every frontend page with the detected country and IP address. Visible only to shop managers and administrators."
+msgstr ""
+
+#: admin/views/settings-page.php:386
+msgid "Save Settings"
+msgstr ""
+
+#: admin/views/settings-page.php:389
+msgid "Reset to Defaults"
+msgstr ""
+
+#: includes/class-geoblock-frontend.php:110
+msgid "This product is not available in your country."
+msgstr ""
+
+#: includes/class-geoblock-frontend.php:111
 msgid "Product not available"
 msgstr ""
 
-#: admin/views/settings-page.php
-msgid "Set global mode"
+#. translators: %s: product name
+#: includes/class-geoblock-frontend.php:296
+#, php-format
+msgid "\"%s\" has been removed from your cart as it is not available in your country."
+msgstr ""
+
+#: includes/class-geoblock-frontend.php:334
+msgid "Your cart contains a product that is not available in your country. Please remove it before placing your order."
+msgstr ""
+
+#: includes/class-geoblock-frontend.php:383
+#: includes/class-geoblock-shortcodes.php:97
+msgid "This product is not available for purchase in your country."
+msgstr ""
+
+#. translators: %s: WooCommerce plugin URL
+#: windcodex-geoblock.php:71
+#, php-format
+msgid "<strong>GeoBlock Country Restrictions</strong> requires <a href=\"%s\">WooCommerce</a> to be installed and active."
+msgstr ""
+
+#. translators: %s: GeoBlock Pro plugin URL
+#: windcodex-geoblock.php:96
+msgid "<strong>WindCodex GeoBlock</strong> cannot be activated while <strong>GeoBlock Pro</strong> is active."
+msgstr ""
+
+#: windcodex-geoblock.php:157
+msgid "WindCodex GeoBlock requires WooCommerce to be installed and active before activation."
+msgstr ""
+
+#: windcodex-geoblock.php:158
+msgid "Plugin activation failed"
 msgstr ""

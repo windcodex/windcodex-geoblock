@@ -3,7 +3,7 @@ Contributors: windcodex
 Tags: woocommerce, geo blocking, country restriction, geolocation, block country
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.6
@@ -214,6 +214,10 @@ Yes. WooCommerce Blocks compatibility is declared. Cart and checkout protection 
 
 == Changelog ==
 
+= 1.0.2 =
+* Added: Loads plugin translations via `load_plugin_textdomain()` for full compatibility with translation plugins (Loco Translate, WPML String Translation) and manually installed language packs.
+* Updated: Regenerated the `.pot` translation template with the latest translatable strings.
+
 = 1.0.1 =
 * Improved: Settings page UI for better usability.
 * Added: Admin review request notice.
@@ -242,6 +246,9 @@ Yes. WooCommerce Blocks compatibility is declared. Cart and checkout protection 
 * Translation-ready with complete `.pot` file included.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Loads plugin translations for full compatibility with translation plugins and language packs. No database changes – safe to update.
 
 = 1.0.1 =
 Adds inline Pro upsell banner, review request notice, and help button in the settings header. No database changes – safe to update.
