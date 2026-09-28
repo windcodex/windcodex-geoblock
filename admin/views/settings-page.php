@@ -31,7 +31,7 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 				<span id="gg-breadcrumb-current"><?php esc_html_e( 'General', 'windcodex-geoblock' ); ?></span>
 			</div>
 			<div class="gg-help-wrap">
-				<button type="button" class="gg-help-btn" id="gg-help-btn" aria-expanded="false" aria-haspopup="true">
+				<button type="button" class="gg-help-btn" id="gg-help-btn" aria-expanded="false" aria-haspopup="true" aria-controls="gg-help-dropdown">
 					<span class="dashicons dashicons-editor-help"></span>
 					<?php esc_html_e( 'Help', 'windcodex-geoblock' ); ?>
 				</button>
@@ -39,6 +39,10 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 					<a href="https://docs.windcodex.com/docs/geoblock" target="_blank" rel="noopener" class="gg-help-item">
 						<span class="gg-help-item-icon dashicons dashicons-media-document"></span>
 						<?php esc_html_e( 'Documentation', 'windcodex-geoblock' ); ?>
+					</a>
+					<a href="https://wordpress.org/support/plugin/windcodex-geoblock/" target="_blank" rel="noopener" class="gg-help-item">
+						<span class="gg-help-item-icon dashicons dashicons-sos"></span>
+						<?php esc_html_e( 'Support Forum', 'windcodex-geoblock' ); ?>
 					</a>
 					<a href="https://wordpress.org/support/plugin/windcodex-geoblock/reviews/#new-post" target="_blank" rel="noopener" class="gg-help-item">
 						<span class="gg-help-item-icon dashicons dashicons-star-filled"></span>

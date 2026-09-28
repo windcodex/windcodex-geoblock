@@ -3,7 +3,7 @@ Contributors: windcodex
 Tags: woocommerce, geo blocking, country restriction, geolocation, block country
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.6
@@ -214,6 +214,12 @@ Yes. WooCommerce Blocks compatibility is declared. Cart and checkout protection 
 
 == Changelog ==
 
+= 1.0.3 =
+* Added: "Docs" link next to "Settings" on the Plugins screen.
+* Added: Support Forum link in the Help menu.
+* Improved: Refreshed Help menu design. The menu now closes with the Escape key and is correctly announced to screen readers.
+* Improved: Uninstalling GeoBlock now removes all of its settings and per-product restriction rules. If GeoBlock Pro is active, nothing is removed, because Pro uses the same settings and rules.
+
 = 1.0.2 =
 * Added: Loads plugin translations via `load_plugin_textdomain()` for full compatibility with translation plugins (Loco Translate, WPML String Translation) and manually installed language packs.
 * Updated: Regenerated the `.pot` translation template with the latest translatable strings.
@@ -246,6 +252,9 @@ Yes. WooCommerce Blocks compatibility is declared. Cart and checkout protection 
 * Translation-ready with complete `.pot` file included.
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+Adds a Docs link on the Plugins screen and Help menu improvements. No database changes – safe to update.
 
 = 1.0.2 =
 Loads plugin translations for full compatibility with translation plugins and language packs. No database changes – safe to update.

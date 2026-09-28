@@ -377,7 +377,10 @@ class GeoBlock_Admin {
 		$settings_link = '<a href="' . esc_url( admin_url( 'admin.php?page=geoblock-settings' ) ) . '">'
 			. esc_html__( 'Settings', 'windcodex-geoblock' )
 			. '</a>';
-		array_unshift( $links, $settings_link );
+		$docs_link     = '<a href="' . esc_url( 'https://docs.windcodex.com/docs/geoblock' ) . '" target="_blank" rel="noopener noreferrer">'
+			. esc_html__( 'Docs', 'windcodex-geoblock' )
+			. '</a>';
+		array_unshift( $links, $settings_link, $docs_link );
 		return $links;
 	}
 }
