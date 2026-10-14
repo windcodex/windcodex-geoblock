@@ -2,6 +2,7 @@
 /**
  * @wordpress-plugin
  * Plugin Name:       WindCodex GeoBlock
+ * Plugin URI:        https://windcodex.com/product/woocommerce-country-restriction-plugin/
  * Tagline:           Country Restrictions for WooCommerce
  * Description:       Restrict WooCommerce products by country using geolocation. Hide products, block purchases, or show a custom message per product. No API key required.
  * Version:           1.0.3
