@@ -162,7 +162,7 @@
 			$( '#geoblock_redirect_url' ).trigger( 'focus' );
 			return;
 		}
-		//setBusy( true );
+		setBusy( true );
 		showToast( '', 'saving' );
 
 		$.ajax( {
@@ -196,7 +196,7 @@
 			return;
 		}
 
-		//setBusy( true );
+		setBusy( true );
 		showToast( '', 'saving' );
 
 		$.ajax( {
@@ -332,7 +332,7 @@
 		clearTimeout( toastTimer );
 
 		if ( type === 'saving' ) {
-			$toast.html( '<span class="gg-spinner" style="border-top-color:var(--gg-accent);border-color:var(--gg-accent-mid);"></span> ' + geoblock_admin.i18n.saving );
+			$toast.html( '<span class="gg-spinner gg-spinner-toast"></span> ' + geoblock_admin.i18n.saving );
 			$toast.attr( 'class', 'gg-toast gg-toast-show' );
 			return;
 		}
