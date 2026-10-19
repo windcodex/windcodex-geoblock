@@ -540,6 +540,11 @@
 }
 
 /* ── Spinner on save ─────────────────────────────────────────── */
+.gg-spinner.gg-spinner-toast {
+	flex-shrink: 0;
+	border-color: var(--gg-accent-mid);
+	border-top-color: var(--gg-accent);
+}
 .gg-spinner {
 	display: inline-block;
 	width: 13px;
