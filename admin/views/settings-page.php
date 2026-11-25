@@ -16,6 +16,12 @@ $gg_redirect              = $gg_settings['redirect_url']          ?? '';
 $gg_force_geo             = $gg_settings['force_geolocation']     ?? 'no';
 $gg_catalog_purchasable   = $gg_settings['catalog_purchasable']   ?? 'no';
 $gg_debug                 = $gg_settings['debug_mode']            ?? 'no';
+$gg_bypass_admins         = $gg_settings['bypass_admins']         ?? 'no';
+$gg_exempt_bots           = $gg_settings['exempt_bots']           ?? 'no';
+
+$gg_health        = new GeoBlock_Health( new GeoBlock_Geolocation() );
+$gg_health_checks = $gg_health->get_checks();
+$gg_health_status = $gg_health->get_overall_status( $gg_health_checks );
 
 $gg_wc_geo     = get_option( 'woocommerce_default_customer_address' );
 $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' ), true );
@@ -109,6 +115,13 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 		</button>
 		<button class="gg-tab-btn" data-tab="advanced" data-breadcrumb="<?php esc_attr_e( 'Advanced', 'windcodex-geoblock' ); ?>" role="tab" aria-selected="false">
 			<?php esc_html_e( 'Advanced', 'windcodex-geoblock' ); ?>
+		</button>
+		<button class="gg-tab-btn" data-tab="status" data-breadcrumb="<?php esc_attr_e( 'Status', 'windcodex-geoblock' ); ?>" role="tab" aria-selected="false">
+			<?php esc_html_e( 'Status', 'windcodex-geoblock' ); ?>
+			<?php if ( 'warn' === $gg_health_status ) : ?>
+				<span class="gg-tab-dot" aria-hidden="true"></span>
+				<span class="screen-reader-text"><?php esc_html_e( '(needs attention)', 'windcodex-geoblock' ); ?></span>
+			<?php endif; ?>
 		</button>
 	</div>
 
@@ -243,7 +256,7 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 							class="gg-textarea"
 						><?php echo esc_textarea( $gg_message ); ?></textarea>
 						<p class="gg-field-hint">
-							<?php esc_html_e( 'Shown on the product page when restricted. HTML is allowed.', 'windcodex-geoblock' ); ?>
+							<?php esc_html_e( 'Shown on the product page when restricted. HTML is allowed. Placeholders: {country_name}, {country} (code) and {country_flag}.', 'windcodex-geoblock' ); ?>
 						</p>
 					</div>
 				</div>
@@ -352,6 +365,60 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 					</div>
 				</div>
 
+				<!-- Bypass admins -->
+				<div class="gg-form-row">
+					<div class="gg-row-label">
+						<div class="gg-row-title"><?php esc_html_e( 'Admin Bypass', 'windcodex-geoblock' ); ?></div>
+						<div class="gg-row-hint"><?php esc_html_e( 'Never restrict shop managers', 'windcodex-geoblock' ); ?></div>
+					</div>
+					<div class="gg-row-body">
+						<div class="gg-toggle-row">
+							<label class="gg-toggle-wrap">
+								<input type="checkbox"
+									name="geoblock_settings[bypass_admins]"
+									id="gg-bypass-admins-toggle"
+									value="yes"
+									class="gg-toggle-checkbox screen-reader-text"
+									<?php checked( $gg_bypass_admins, 'yes' ); ?>>
+								<span class="gg-toggle-track gg-toggle-sm">
+									<span class="gg-toggle-thumb"></span>
+								</span>
+							</label>
+							<div class="gg-toggle-label">
+								<span class="gg-toggle-main"><?php esc_html_e( 'Let administrators and shop managers see everything', 'windcodex-geoblock' ); ?></span>
+								<span class="gg-toggle-sub"><?php esc_html_e( 'Logged-in users who can manage WooCommerce are never restricted, so you can edit and check any product. Use the debug toolbar "Test as" picker to preview a country - bypass is paused while you test.', 'windcodex-geoblock' ); ?></span>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Exempt bots -->
+				<div class="gg-form-row">
+					<div class="gg-row-label">
+						<div class="gg-row-title"><?php esc_html_e( 'Search Bots', 'windcodex-geoblock' ); ?></div>
+						<div class="gg-row-hint"><?php esc_html_e( 'Keep restricted products indexable', 'windcodex-geoblock' ); ?></div>
+					</div>
+					<div class="gg-row-body">
+						<div class="gg-toggle-row">
+							<label class="gg-toggle-wrap">
+								<input type="checkbox"
+									name="geoblock_settings[exempt_bots]"
+									id="gg-exempt-bots-toggle"
+									value="yes"
+									class="gg-toggle-checkbox screen-reader-text"
+									<?php checked( $gg_exempt_bots, 'yes' ); ?>>
+								<span class="gg-toggle-track gg-toggle-sm">
+									<span class="gg-toggle-thumb"></span>
+								</span>
+							</label>
+							<div class="gg-toggle-label">
+								<span class="gg-toggle-main"><?php esc_html_e( 'Never restrict search engine and link-preview bots', 'windcodex-geoblock' ); ?></span>
+								<span class="gg-toggle-sub"><?php esc_html_e( 'Googlebot, Bingbot and social link-preview crawlers always see the product, so Hide mode cannot drop it from search results or break shared-link previews. Detected by user agent, so treat it as an SEO helper, not a security control.', 'windcodex-geoblock' ); ?></span>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<!-- Debug Mode -->
 				<div class="gg-form-row gg-form-row-last">
 					<div class="gg-row-label">
@@ -373,7 +440,7 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 							</label>
 							<div class="gg-toggle-label">
 								<span class="gg-toggle-main"><?php esc_html_e( 'Enable debug toolbar', 'windcodex-geoblock' ); ?></span>
-								<span class="gg-toggle-sub"><?php esc_html_e( 'Shows a bar at the bottom of every frontend page with the detected country and IP address. Visible only to shop managers and administrators.', 'windcodex-geoblock' ); ?></span>
+								<span class="gg-toggle-sub"><?php esc_html_e( 'Shows a bar at the bottom of every frontend page with the detected country and IP address, plus a "Test as" picker to preview your store as a visitor from any country. Visible only to shop managers and administrators.', 'windcodex-geoblock' ); ?></span>
 							</div>
 						</div>
 					</div>
@@ -382,6 +449,85 @@ $gg_geo_active = in_array( $gg_wc_geo, array( 'geolocation', 'geolocation_ajax' 
 			</div><!-- .gg-card -->
 		</div><!-- [Advanced] -->
 
+
+		<!-- ---- TAB: Status ---- -->
+		<div class="gg-tab-panel" data-panel="status">
+			<div class="gg-card">
+				<div class="gg-card-header">
+					<div>
+						<div class="gg-card-header-title"><?php esc_html_e( 'Setup Health', 'windcodex-geoblock' ); ?></div>
+						<div class="gg-card-header-sub"><?php esc_html_e( 'Checks that country detection is set up correctly on this site.', 'windcodex-geoblock' ); ?></div>
+					</div>
+				</div>
+				<?php
+				$gg_last_check = count( $gg_health_checks ) - 1;
+				foreach ( $gg_health_checks as $gg_i => $gg_check ) :
+					$gg_status_labels = array(
+						'ok'   => __( 'OK', 'windcodex-geoblock' ),
+						'warn' => __( 'Needs attention', 'windcodex-geoblock' ),
+						'info' => __( 'Info', 'windcodex-geoblock' ),
+					);
+					?>
+				<div class="gg-form-row<?php echo ( $gg_i === $gg_last_check ) ? ' gg-form-row-last' : ''; ?>">
+					<div class="gg-row-label">
+						<div class="gg-row-title"><?php echo esc_html( $gg_check['label'] ); ?></div>
+					</div>
+					<div class="gg-row-body">
+						<span class="gg-health-badge gg-health-<?php echo esc_attr( $gg_check['status'] ); ?>"><?php echo esc_html( $gg_status_labels[ $gg_check['status'] ] ); ?></span>
+						<p class="gg-health-detail"><?php echo wp_kses( $gg_check['detail'], array( 'a' => array( 'href' => array() ) ) ); ?></p>
+					</div>
+				</div>
+				<?php endforeach; ?>
+			</div>
+
+			<div class="gg-card">
+				<div class="gg-card-header">
+					<div>
+						<div class="gg-card-header-title"><?php esc_html_e( 'Country Shortcodes', 'windcodex-geoblock' ); ?></div>
+						<div class="gg-card-header-sub"><?php esc_html_e( 'Show or hide any content by visitor country - on pages, posts or page builders.', 'windcodex-geoblock' ); ?></div>
+					</div>
+				</div>
+				<div class="gg-form-row">
+					<div class="gg-row-label"><div class="gg-row-title"><code>[geoblock_show]</code></div></div>
+					<div class="gg-row-body">
+						<code>[geoblock_show countries="US,CA"]Free shipping to North America[/geoblock_show]</code>
+						<p class="gg-field-hint"><?php esc_html_e( 'Visible only to visitors from the listed countries.', 'windcodex-geoblock' ); ?></p>
+					</div>
+				</div>
+				<div class="gg-form-row">
+					<div class="gg-row-label"><div class="gg-row-title"><code>[geoblock_hide]</code></div></div>
+					<div class="gg-row-body">
+						<code>[geoblock_hide countries="EU"]Prices exclude VAT[/geoblock_hide]</code>
+						<p class="gg-field-hint"><?php esc_html_e( 'Visible to everyone except the listed countries.', 'windcodex-geoblock' ); ?></p>
+					</div>
+				</div>
+				<div class="gg-form-row">
+					<div class="gg-row-label"><div class="gg-row-title"><code>[geoblock_country]</code></div></div>
+					<div class="gg-row-body">
+						<code>[geoblock_country format="flag_name"]</code>
+						<p class="gg-field-hint"><?php esc_html_e( 'Prints the visitor country. Formats: name (default), code, flag, flag_name.', 'windcodex-geoblock' ); ?></p>
+					</div>
+				</div>
+				<div class="gg-form-row gg-form-row-last">
+					<div class="gg-row-label"><div class="gg-row-title"><?php esc_html_e( 'Region names', 'windcodex-geoblock' ); ?></div></div>
+					<div class="gg-row-body">
+						<p class="gg-field-hint" style="margin-top:0;">
+							<?php
+							$gg_region_keys = array_keys( GeoBlock_Regions::get_groups() );
+							echo esc_html(
+								sprintf(
+									/* translators: %s: list of region tokens */
+									__( 'Use country codes or these region names in the countries attribute: %s.', 'windcodex-geoblock' ),
+									implode( ', ', $gg_region_keys )
+								)
+							);
+							?>
+						</p>
+						<p class="gg-field-hint"><?php esc_html_e( 'Pages that use these shortcodes are marked as not cacheable so one country never sees another country\'s version.', 'windcodex-geoblock' ); ?></p>
+					</div>
+				</div>
+			</div>
+		</div><!-- [Status] -->
 
 		<!-- Footer Action Bar -->
 		<div class="gg-footer-bar" id="gg-footer-bar" data-tab-visible="general,advanced">

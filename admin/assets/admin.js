@@ -240,6 +240,8 @@
 		if ( ! data.force_geolocation )     { data.force_geolocation     = 'no'; }
 		if ( ! data.redirect_enabled )      { data.redirect_enabled      = 'no'; }
 		if ( ! data.catalog_purchasable )   { data.catalog_purchasable   = 'no'; }
+		if ( ! data.bypass_admins )         { data.bypass_admins         = 'no'; }
+		if ( ! data.exempt_bots )           { data.exempt_bots           = 'no'; }
 
 		return data;
 	}
@@ -302,6 +304,9 @@
 
 		var debugOn = ( settings.debug_mode === 'yes' );
 		$( '#gg-debug-toggle' ).prop( 'checked', debugOn );
+
+		$( '#gg-bypass-admins-toggle' ).prop( 'checked', settings.bypass_admins === 'yes' );
+		$( '#gg-exempt-bots-toggle' ).prop( 'checked', settings.exempt_bots === 'yes' );
 
 		// Show/hide catalog sub-option on reset
 		if ( settings.restriction_mode === 'catalog_only' ) {
@@ -369,6 +374,18 @@
 			updateRuleSummary( mode );
 		} );
 
+		// Region presets: add a whole group to the selection / clear it.
+		$( '.gg-region-btn' ).on( 'click', function () {
+			var group    = ( geoblock_admin.regions || {} )[ $( this ).data( 'region' ) ] || [];
+			var selected = $select.val() || [];
+			$select.val( selected.concat( group.filter( function ( code ) {
+				return selected.indexOf( code ) === -1;
+			} ) ) ).trigger( 'change' );
+		} );
+
+		$( '.gg-region-clear' ).on( 'click', function () {
+			$select.val( [] ).trigger( 'change' );
+		} );
 
 	}
 

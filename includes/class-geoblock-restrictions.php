@@ -25,6 +25,9 @@ class GeoBlock_Restrictions {
 	/** @var array|null Cached global settings */
 	private $settings = null;
 
+	/** @var bool|null Cached per-request exemption result */
+	private $exempt = null;
+
 	/**
 	 * @param GeoBlock_Geolocation $geo
 	 */
@@ -46,14 +49,82 @@ class GeoBlock_Restrictions {
 			return false;
 		}
 
-		$country = $this->geo->get_country();
-		$rules   = $this->get_product_rules( $product_id );
+		$rules = $this->get_product_rules( $product_id );
 
 		if ( empty( $rules ) || empty( $rules['countries'] ) ) {
 			return false;
 		}
 
-		return $this->evaluate( $rules, $country );
+		if ( $this->is_exempt_visitor() ) {
+			return false;
+		}
+
+		return $this->evaluate( $rules, $this->geo->get_country() );
+	}
+
+	/**
+	 * The geolocation service, for shortcodes that need the visitor's country.
+	 *
+	 * @return GeoBlock_Geolocation
+	 */
+	public function get_geolocation(): GeoBlock_Geolocation {
+		return $this->geo;
+	}
+
+	/**
+	 * True when the current visitor should never be restricted: shop managers
+	 * (if "bypass admins" is on and they are not in test mode) or search
+	 * engine / link-preview crawlers (if "exempt bots" is on).
+	 *
+	 * @return bool
+	 */
+	public function is_exempt_visitor(): bool {
+		if ( null !== $this->exempt ) {
+			return $this->exempt;
+		}
+
+		$settings = $this->get_settings();
+		$exempt   = false;
+
+		if ( 'yes' === ( $settings['bypass_admins'] ?? 'no' )
+			&& current_user_can( 'manage_woocommerce' )
+			&& ! $this->geo->has_test_country() ) {
+			$exempt = true;
+		}
+
+		if ( ! $exempt && 'yes' === ( $settings['exempt_bots'] ?? 'no' ) && $this->is_crawler() ) {
+			$exempt = true;
+		}
+
+		/**
+		 * Filter whether the current visitor is exempt from all restrictions.
+		 *
+		 * @param bool $exempt
+		 */
+		$this->exempt = (bool) apply_filters( 'geoblock_is_exempt_visitor', $exempt );
+
+		return $this->exempt;
+	}
+
+	/**
+	 * Matches the request user agent against known search engine and
+	 * link-preview crawlers. User agents can be spoofed, so this is meant for
+	 * SEO and link previews, not as a security control.
+	 *
+	 * @return bool
+	 */
+	private function is_crawler(): bool {
+		$agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+		if ( '' === $agent ) {
+			return false;
+		}
+
+		$pattern = (string) apply_filters(
+			'geoblock_crawler_pattern',
+			'googlebot|adsbot-google|mediapartners-google|google-inspectiontool|bingbot|bingpreview|duckduckbot|slurp|baiduspider|yandexbot|applebot|facebookexternalhit|linkedinbot|twitterbot|pinterestbot'
+		);
+
+		return (bool) preg_match( '/(' . $pattern . ')/i', $agent );
 	}
 
 	/**
@@ -74,9 +145,33 @@ class GeoBlock_Restrictions {
 	 */
 	public function get_restriction_message(): string {
 		$settings = $this->get_settings();
-		return ! empty( $settings['custom_message'] )
+		$message  = ! empty( $settings['custom_message'] )
 			? wp_kses_post( $settings['custom_message'] )
 			: esc_html__( 'Sorry, this product is not available in your country.', 'windcodex-geoblock' );
+
+		return $this->replace_placeholders( $message );
+	}
+
+	/**
+	 * Replaces {country}, {country_name} and {country_flag} with the
+	 * visitor's detected country. Values are escaped.
+	 *
+	 * @param  string $message
+	 * @return string
+	 */
+	public function replace_placeholders( string $message ): string {
+		if ( false === strpos( $message, '{country' ) ) {
+			return $message;
+		}
+
+		$code = $this->geo->get_country();
+		$flag = $this->geo->get_flag_emoji( $code );
+
+		return strtr( $message, array(
+			'{country}'      => esc_html( $code ),
+			'{country_name}' => esc_html( $this->geo->get_country_name( $code ) ),
+			'{country_flag}' => '??' === $flag ? '' : esc_html( $flag ),
+		) );
 	}
 
 	/**

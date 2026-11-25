@@ -1,20 +1,20 @@
 === WindCodex GeoBlock – WooCommerce Country Restriction & Geo Blocking ===
 Contributors: windcodex
-Tags: woocommerce, geo blocking, country restriction, geolocation, block country
+Tags: woocommerce, country restriction, geo blocking, woocommerce country restrictions, restrict products by country
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.3
+Stable tag: 1.1.0
 Requires PHP: 7.4
 WC requires at least: 7.0
 WC tested up to: 10.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Block WooCommerce products by country. Hide products, restrict checkout, or show a custom message by geolocation – no API key required.
+Restrict WooCommerce products by country: hide them, block purchase or sell only to chosen countries. Uses WooCommerce geolocation. No paid API.
 
 == Description ==
 
-**WindCodex GeoBlock** lets you restrict WooCommerce products by country using WooCommerce's built-in geolocation – no API key, no third-party service, no code required.
+**WindCodex GeoBlock** lets you restrict WooCommerce products by country using WooCommerce's built-in geolocation – no paid API, no third-party service, no code required.
 
 Whether you need to comply with local laws, honour export restrictions, manage licensing territories, or simply limit shipping to countries you serve – GeoBlock gives you per-product country control in minutes.
 
@@ -51,6 +51,13 @@ Product stays visible in the catalog. On the product page, the Add to Cart butto
 * **Force Geolocation option** – Ignore saved addresses and always detect country from current IP.
 * **Session & transient caching** – Country detection results cached per session. Zero repeated geolocation lookups.
 * **Admin debug toolbar** – Shows detected country, IP address, detection source, and a settings link. Visible to admins only.
+* **Test as country** – Preview your store as a visitor from any country from the debug toolbar. Admin-only, with an admin-bar reminder so you never forget you are testing.
+* **Country content shortcodes** – `[geoblock_show]`, `[geoblock_hide]` and `[geoblock_country]` show or hide any content by visitor country, on any page or post.
+* **Region presets** – Add the EU, EEA, North America, Nordics, GCC, ASEAN or Australia & NZ to a rule in one click.
+* **Message placeholders** – Use `{country_name}`, `{country}` and `{country_flag}` in your restriction message.
+* **Search bot exemption** – Optionally let Googlebot, Bingbot and link-preview crawlers always see restricted products so Hide mode cannot hurt your search visibility.
+* **Admin bypass** – Optionally never restrict administrators and shop managers.
+* **Setup health check** – A Status tab that checks geolocation, country data source, page caching and your detected country.
 * **Shortcode support** – `[geoblock_product_message]` renders the restriction message in any page builder, custom template, Elementor, or Divi.
 * **HPOS compatible** – Fully supports WooCommerce High-Performance Order Storage.
 * **Translation ready** – Complete `.pot` file included. Compatible with Loco Translate and WPML String Translation.
@@ -88,6 +95,20 @@ Display the restriction message anywhere on your site using:
 `[geoblock_product_message id=123]`
 `[geoblock_product_message id=123 class="my-notice highlight"]`
 
+= Country Content Shortcodes =
+
+Show or hide any content by the visitor's country:
+
+`[geoblock_show countries="US,CA"]Free shipping to North America[/geoblock_show]`
+`[geoblock_hide countries="EU"]Prices exclude VAT[/geoblock_hide]`
+`[geoblock_country format="flag_name"]`
+
+**Attributes:**
+* `countries` – Comma-separated country codes and/or region names: EU, EEA, NORTH_AMERICA, NORDICS, GCC, ASEAN, ANZ.
+* `format` (`[geoblock_country]` only) – `name` (default), `code`, `flag` or `flag_name`.
+
+Pages that use these shortcodes are marked as not cacheable (`DONOTCACHEPAGE`) so one country never sees another country's version. Use the `geoblock_shortcode_disable_cache` filter to turn this off.
+
 = How It Works =
 
 1. Install and activate the plugin.
@@ -98,15 +119,25 @@ Display the restriction message anywhere on your site using:
 
 = Requirements =
 
-* WordPress 5.8 or higher
+* WordPress 6.9 or higher
 * WooCommerce 7.0 or higher
 * PHP 7.4 or higher
 * WooCommerce Geolocation must be enabled: **WooCommerce Settings > General > Default customer location > Geolocate**
+* For IP lookups, either a free MaxMind license key (**WooCommerce > Settings > Integration**) or a host/CDN that passes the visitor's country, such as Cloudflare
 
-= 🚀 Pro Version =
+= GeoBlock Pro =
 
-Need bulk category rules, payment gateway restrictions by country, variation-level rules, or an analytics dashboard?
-[GeoBlock Pro is available at windcodex.com](https://windcodex.com/product/woocommerce-country-restriction-plugin/)
+The free plugin is fully working. GeoBlock Pro adds bulk category rules, payment gateway restrictions by country, variation-level rules and an analytics dashboard.
+
+[See GeoBlock Pro](https://windcodex.com/product/woocommerce-country-restriction-plugin/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=geoblock)
+
+= More Free Plugins from WindCodex =
+
+* [ReturnDesk](https://wordpress.org/plugins/windcodex-returndesk/)
+* [ScraperBlock](https://wordpress.org/plugins/windcodex-scraperblock/)
+* [SwitchUser](https://wordpress.org/plugins/windcodex-switchuser/)
+* [Ops](https://wordpress.org/plugins/windcodex-ops/)
+* [Forge](https://wordpress.org/plugins/windcodex-forge/)
 
 = Privacy =
 
@@ -136,7 +167,7 @@ GeoBlock uses the visitor's IP address solely to determine their country. No per
 
 = Does this plugin require any API key or account? =
 
-No. GeoBlock uses WooCommerce's built-in geolocation engine (MaxMind GeoLite2), which is already bundled with WooCommerce. No external API key, account, or paid service is needed.
+No paid service or GeoBlock account is needed. GeoBlock uses WooCommerce's own geolocation. If your host or CDN passes the visitor's country (for example Cloudflare), that works with no extra setup. Otherwise WooCommerce looks up the country in the MaxMind GeoLite2 database, which needs a free MaxMind license key under **WooCommerce > Settings > Integration**. The lookup runs on your own server. Customers with a saved shipping or billing address are detected from that address either way.
 
 = Which countries can I block or restrict? =
 
@@ -176,11 +207,19 @@ Yes. Each product has its own independent set of rules. Product A can be restric
 
 = Does geo blocking affect SEO or Google indexing? =
 
-No. Country restrictions are applied at the application layer. Search engine crawlers are not affected and your products continue to be indexed normally. Country-based product restrictions are standard, accepted practice in international e-commerce.
+Search engine crawlers are detected by IP like any other visitor. Googlebot crawls mostly from US IP addresses, so if you use **Hide completely** for the US, Google may see a 404 and drop that product from its index. To keep restricted products indexed, turn on **Never restrict search engine and link-preview bots** in the Advanced tab, or use **Show Restriction Message** or **Hide from Catalog** for countries your main crawlers come from. Products open to the crawler's country are indexed normally.
+
+= Can I show or hide normal page content by country? =
+
+Yes. Wrap content in `[geoblock_show countries="US,CA"]...[/geoblock_show]` to show it only to those countries, or `[geoblock_hide countries="EU"]...[/geoblock_hide]` to show it to everyone else. You can use country codes or region names such as EU, EEA and NORDICS.
+
+= How do I preview my store as a visitor from another country? =
+
+Turn on Debug Mode in **WooCommerce > GeoBlock Restrictions > Advanced**, then use the "Test as" picker in the toolbar at the bottom of your site. Only you see it, and an admin-bar notice reminds you while it is active.
 
 = Is this plugin GDPR compliant? =
 
-Yes. GeoBlock processes IP addresses only to determine the visitor's geographic country – a legitimate interest under e-commerce operation. No personal data is stored beyond the session and transient TTL (1 hour). No data is shared with third parties. Update your own privacy policy to document your use of geolocation.
+GeoBlock uses the visitor's IP address only to work out their country, keeps the result for one hour (WooCommerce session and WordPress transient), and sends no data to external services. Whether your whole store meets GDPR depends on your setup, so mention country detection in your privacy policy and check with your own advisor.
 
 = Does this work with WooCommerce Subscriptions? =
 
@@ -213,6 +252,17 @@ Yes. WooCommerce Blocks compatibility is declared. Cart and checkout protection 
 3. **Product Meta Box** – Per-product Include/Exclude country rule with searchable country selector and live rule summary preview.
 
 == Changelog ==
+
+= 1.1.0 =
+* Added: `[geoblock_show]`, `[geoblock_hide]` and `[geoblock_country]` shortcodes to show or hide any content by visitor country.
+* Added: "Test as country" picker in the admin debug toolbar, plus an admin-bar reminder while testing.
+* Added: Region presets (EU, EEA, North America, Nordics, GCC, ASEAN, Australia & NZ) on the product country selector.
+* Added: `{country_name}`, `{country}` and `{country_flag}` placeholders in the restriction message.
+* Added: Setting to never restrict search engine and link-preview bots.
+* Added: Setting to never restrict administrators and shop managers.
+* Added: Status tab with a setup health check.
+* Added: `geoblock_region_groups`, `geoblock_is_exempt_visitor`, `geoblock_crawler_pattern` and `geoblock_shortcode_disable_cache` filters.
+* Fixed: The debug toolbar could not be switched off from the settings page.
 
 = 1.0.3 =
 * Added: "Docs" link next to "Settings" on the Plugins screen.
@@ -253,6 +303,9 @@ Yes. WooCommerce Blocks compatibility is declared. Cart and checkout protection 
 
 == Upgrade Notice ==
 
+= 1.1.0 =
+Adds country content shortcodes, a Test as country picker, region presets, a search bot exemption and a setup health check. No database changes – safe to update.
+
 = 1.0.3 =
 Adds a Docs link on the Plugins screen and Help menu improvements. No database changes – safe to update.
 
@@ -264,3 +317,4 @@ Adds inline Pro upsell banner, review request notice, and help button in the set
 
 = 1.0.0 =
 Initial release – no upgrade steps required.
+ 

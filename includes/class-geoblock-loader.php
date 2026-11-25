@@ -105,8 +105,10 @@ class GeoBlock_Loader {
 		// --- Shortcodes ---
 		$this->add_action( 'init', $shortcodes, 'register' );
 
-		// --- Debug toolbar ---
-		$this->add_action( 'wp_footer', $geo, 'maybe_render_debug_toolbar' );
+		// --- Debug toolbar + admin "Test as country" ---
+		$this->add_action( 'wp_footer',       $geo, 'maybe_render_debug_toolbar' );
+		$this->add_action( 'init',            $geo, 'handle_test_country_request' );
+		$this->add_action( 'admin_bar_menu',  $geo, 'register_admin_bar_node', 100 );
 	}
 
 	// --- Helpers --------------------------------------------------------------

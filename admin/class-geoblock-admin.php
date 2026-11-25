@@ -21,6 +21,8 @@ class GeoBlock_Admin {
 		'redirect_url'              => '',
 		'custom_message'            => '',
 		'catalog_purchasable'       => 'no',   // 'no' = block ATC in catalog_only mode (default), 'yes' = allow
+		'bypass_admins'             => 'no',   // 'yes' = shop managers are never restricted.
+		'exempt_bots'               => 'no',   // 'yes' = search engine / link-preview crawlers are never restricted.
 		'debug_mode'                => 'no',
 	);
 
@@ -82,7 +84,9 @@ class GeoBlock_Admin {
 
 		$clean['custom_message']      = wp_kses_post( $input['custom_message'] ?? '' );
 		$clean['catalog_purchasable'] = ( ( $input['catalog_purchasable'] ?? '' ) === 'yes' ) ? 'yes' : 'no';
-		$clean['debug_mode']          = ! empty( $input['debug_mode'] ) ? 'yes' : 'no';
+		$clean['debug_mode']          = ! empty( $input['debug_mode'] ) && 'no' !== $input['debug_mode'] ? 'yes' : 'no';
+		$clean['bypass_admins']       = ( ( $input['bypass_admins'] ?? '' ) === 'yes' ) ? 'yes' : 'no';
+		$clean['exempt_bots']         = ( ( $input['exempt_bots'] ?? '' ) === 'yes' ) ? 'yes' : 'no';
 
 		return $clean;
 	}
@@ -254,6 +258,17 @@ class GeoBlock_Admin {
 				'reset_nonce'      => wp_create_nonce( 'geoblock_reset_settings' ),
 				'current_settings' => $settings,
 				'countries'        => $countries,
+				'regions'          => array_map(
+					static function ( $group ) use ( $countries ) {
+						return array_values( array_filter(
+							$group['countries'],
+							static function ( $code ) use ( $countries ) {
+								return isset( $countries[ $code ] );
+							}
+						) );
+					},
+					GeoBlock_Regions::get_groups()
+				),
 			'i18n'             => array(
 				'saving'               => __( 'Saving...', 'windcodex-geoblock' ),
 				'saved'                => __( 'Settings saved!', 'windcodex-geoblock' ),

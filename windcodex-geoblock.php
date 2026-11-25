@@ -5,7 +5,7 @@
  * Plugin URI:        https://windcodex.com/product/woocommerce-country-restriction-plugin/
  * Tagline:           Country Restrictions for WooCommerce
  * Description:       Restrict WooCommerce products by country using geolocation. Hide products, block purchases, or show a custom message per product. No API key required.
- * Version:           1.0.3
+ * Version:           1.1.0
  * Author:            WindCodex
  * Author URI:        https://www.windcodex.com
  * License:           GPL v2 or later
@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 
 // --- Constants ----------------------------------------------------------------
 
-define( 'GEOBLOCK_VERSION',     '1.0.3' );
+define( 'GEOBLOCK_VERSION',     '1.1.0' );
 define( 'GEOBLOCK_PLUGIN_FILE', __FILE__ );
 define( 'GEOBLOCK_PLUGIN_DIR',  plugin_dir_path( __FILE__ ) );
 define( 'GEOBLOCK_PLUGIN_URL',  plugin_dir_url( __FILE__ ) );
@@ -130,6 +130,8 @@ function geoblock_init() {
 	// Load all classes.
 	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-loader.php';
 	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-geolocation.php';
+	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-regions.php';
+	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-health.php';
 	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-restrictions.php';
 	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-product.php';
 	require_once GEOBLOCK_PLUGIN_DIR . 'includes/class-geoblock-frontend.php';

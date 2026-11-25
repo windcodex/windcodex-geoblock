@@ -38,6 +38,107 @@ class GeoBlock_Shortcodes {
 	 */
 	public function register(): void {
 		add_shortcode( 'geoblock_product_message', array( $this, 'render_product_message' ) );
+		add_shortcode( 'geoblock_country', array( $this, 'render_country' ) );
+		add_shortcode( 'geoblock_show', array( $this, 'render_show' ) );
+		add_shortcode( 'geoblock_hide', array( $this, 'render_hide' ) );
+	}
+
+	// --- Country content shortcodes -------------------------------------------
+
+	/**
+	 * [geoblock_country format="name|code|flag|flag_name"] - prints the
+	 * visitor's detected country.
+	 *
+	 * @param  array|string $atts
+	 * @return string
+	 */
+	public function render_country( $atts ): string {
+		$atts = shortcode_atts( array( 'format' => 'name' ), $atts, 'geoblock_country' );
+		$this->maybe_disable_page_cache();
+
+		$geo  = $this->restrictions->get_geolocation();
+		$code = $geo->get_country();
+		$name = $geo->get_country_name( $code );
+		$flag = $geo->get_flag_emoji( $code );
+		$flag = '??' === $flag ? '' : $flag;
+
+		switch ( $atts['format'] ) {
+			case 'code':
+				$out = $code;
+				break;
+			case 'flag':
+				$out = $flag;
+				break;
+			case 'flag_name':
+				$out = trim( $flag . ' ' . $name );
+				break;
+			default:
+				$out = $name;
+		}
+
+		return esc_html( $out );
+	}
+
+	/**
+	 * [geoblock_show countries="US,CA,EU"]...[/geoblock_show] - content shown
+	 * only to visitors from the listed countries or regions.
+	 *
+	 * @param  array|string $atts
+	 * @param  string|null  $content
+	 * @return string
+	 */
+	public function render_show( $atts, $content = null ): string {
+		$atts      = shortcode_atts( array( 'countries' => '' ), $atts, 'geoblock_show' );
+		$countries = GeoBlock_Regions::expand( $atts['countries'] );
+		$this->maybe_disable_page_cache();
+
+		if ( empty( $countries ) ) {
+			return '';
+		}
+
+		$country = $this->restrictions->get_geolocation()->get_country();
+
+		return in_array( $country, $countries, true ) ? do_shortcode( (string) $content ) : '';
+	}
+
+	/**
+	 * [geoblock_hide countries="US,CA,EU"]...[/geoblock_hide] - content shown
+	 * to everyone except visitors from the listed countries or regions.
+	 *
+	 * @param  array|string $atts
+	 * @param  string|null  $content
+	 * @return string
+	 */
+	public function render_hide( $atts, $content = null ): string {
+		$atts      = shortcode_atts( array( 'countries' => '' ), $atts, 'geoblock_hide' );
+		$countries = GeoBlock_Regions::expand( $atts['countries'] );
+		$this->maybe_disable_page_cache();
+
+		if ( empty( $countries ) ) {
+			return do_shortcode( (string) $content );
+		}
+
+		$country = $this->restrictions->get_geolocation()->get_country();
+
+		return in_array( $country, $countries, true ) ? '' : do_shortcode( (string) $content );
+	}
+
+	/**
+	 * Tells page caching plugins not to cache a page whose output depends on
+	 * the visitor's country, so one country's version is never served to another.
+	 */
+	private function maybe_disable_page_cache(): void {
+		/**
+		 * Filter whether country shortcodes mark the page as uncacheable.
+		 *
+		 * @param bool $disable Default true.
+		 */
+		if ( ! apply_filters( 'geoblock_shortcode_disable_cache', true ) ) {
+			return;
+		}
+		if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+			define( 'DONOTCACHEPAGE', true );
+		}
 	}
 
 	// --- Shortcode handlers ---------------------------------------------------

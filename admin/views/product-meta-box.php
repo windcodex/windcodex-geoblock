@@ -91,6 +91,17 @@ $names_str = implode( ', ', $country_names );
 			</option>
 			<?php endforeach; ?>
 		</select>
+		<div class="gg-region-presets" aria-label="<?php esc_attr_e( 'Region presets', 'windcodex-geoblock' ); ?>">
+			<span class="gg-region-presets-label"><?php esc_html_e( 'Quick add:', 'windcodex-geoblock' ); ?></span>
+			<?php foreach ( GeoBlock_Regions::get_groups() as $region_key => $region ) : ?>
+				<button type="button" class="button button-small gg-region-btn" data-region="<?php echo esc_attr( $region_key ); ?>">
+					+ <?php echo esc_html( $region['label'] ); ?>
+				</button>
+			<?php endforeach; ?>
+			<button type="button" class="button button-small gg-region-clear">
+				<?php esc_html_e( 'Clear all', 'windcodex-geoblock' ); ?>
+			</button>
+		</div>
 		<p class="gg-field-hint" style="margin-top:8px;">
 			<?php esc_html_e( 'Search by name or 2-letter code. Leave empty to remove all restrictions from this product.', 'windcodex-geoblock' ); ?>
 		</p>

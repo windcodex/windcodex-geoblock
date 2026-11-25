@@ -1069,3 +1069,45 @@
 	text-decoration: underline;
 }
 
+
+/* ── Region presets (product meta box) ───────────────────────────────────── */
+.gg-region-presets {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px;
+	margin-top: 10px;
+}
+.gg-region-presets-label {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--gg-text-2);
+}
+
+/* ── Status tab ──────────────────────────────────────────────────────────── */
+.gg-tab-dot {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	margin-left: 6px;
+	border-radius: 50%;
+	background: var(--gg-warn);
+	vertical-align: middle;
+}
+.gg-health-badge {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+	font-weight: 600;
+}
+.gg-health-ok   { background: var(--gg-success-bg); color: var(--gg-success); border: 1px solid var(--gg-success-bdr); }
+.gg-health-warn { background: var(--gg-warn-bg);    color: var(--gg-warn);    border: 1px solid var(--gg-warn-bdr); }
+.gg-health-info { background: var(--gg-accent-light); color: var(--gg-accent); border: 1px solid var(--gg-accent-mid); }
+.gg-health-detail {
+	margin: 8px 0 0;
+	font-size: 13px;
+	line-height: 1.6;
+	color: var(--gg-text-2);
+}
+.gg-health-detail a { color: var(--gg-accent); font-weight: 600; }

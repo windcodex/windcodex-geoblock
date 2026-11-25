@@ -27,6 +27,12 @@ class GeoBlock_Geolocation {
 	 */
 	public function get_country(): string {
 
+		// 0. Admin "Test as country" override - never cached, managers only.
+		$test_country = $this->get_test_country();
+		if ( $test_country ) {
+			return $test_country;
+		}
+
 		$force_geo = $this->is_force_geolocation_enabled();
 
 		// 1. Logged-in customer with a saved shipping address - most accurate.
@@ -118,6 +124,108 @@ class GeoBlock_Geolocation {
 		return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1' ) );
 	}
 
+	// -- Test as country (admin only) -----------------------------------
+
+	/** Cookie that stores the admin's "test as country" choice. */
+	const TEST_COOKIE = 'geoblock_test_country';
+
+	/** Nonce action for switching the test country. */
+	const TEST_NONCE_ACTION = 'geoblock_test_country';
+
+	/**
+	 * Returns the country an admin is currently testing as, or null.
+	 * Only honoured for users who can manage WooCommerce.
+	 *
+	 * @return string|null
+	 */
+	public function get_test_country(): ?string {
+		if ( empty( $_COOKIE[ self::TEST_COOKIE ] ) || ! did_action( 'init' ) ) {
+			return null;
+		}
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return null;
+		}
+		$code = strtoupper( sanitize_text_field( wp_unslash( $_COOKIE[ self::TEST_COOKIE ] ) ) );
+		return $this->is_valid_country_code( $code ) ? $code : null;
+	}
+
+	/** @return bool */
+	public function has_test_country(): bool {
+		return null !== $this->get_test_country();
+	}
+
+	/**
+	 * Handles the "Test as country" form / link: validates the nonce, sets or
+	 * clears the cookie and redirects back to the same page without the params.
+	 */
+	public function handle_test_country_request(): void {
+		if ( ! isset( $_GET['geoblock_test_country'] ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+		$nonce = isset( $_GET['_geoblock_nonce'] ) ? sanitize_text_field( wp_unslash( $_GET['_geoblock_nonce'] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, self::TEST_NONCE_ACTION ) ) {
+			return;
+		}
+
+		$code   = strtoupper( sanitize_text_field( wp_unslash( $_GET['geoblock_test_country'] ) ) );
+		$secure = is_ssl();
+
+		if ( $this->is_valid_country_code( $code ) && 'OFF' !== $code ) {
+			setcookie( self::TEST_COOKIE, $code, 0, COOKIEPATH ?: '/', COOKIE_DOMAIN, $secure, true );
+		} else {
+			setcookie( self::TEST_COOKIE, '', time() - YEAR_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, $secure, true );
+		}
+
+		wp_safe_redirect( remove_query_arg( array( 'geoblock_test_country', '_geoblock_nonce' ) ) );
+		exit;
+	}
+
+	/**
+	 * Admin bar indicator - shown while the debug toolbar is on or a test
+	 * country is active, so an admin can never forget they are testing.
+	 *
+	 * @param WP_Admin_Bar $bar
+	 */
+	public function register_admin_bar_node( $bar ): void {
+		if ( is_admin() || ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+		$test = $this->get_test_country();
+		if ( ! $test ) {
+			return;
+		}
+		$bar->add_node( array(
+			'id'    => 'geoblock-test-country',
+			'title' => esc_html(
+				sprintf(
+					/* translators: %s: country name and flag */
+					__( 'GeoBlock test: %s (click to exit)', 'windcodex-geoblock' ),
+					$this->get_flag_emoji( $test ) . ' ' . $this->get_country_name( $test )
+				)
+			),
+			'href'  => esc_url( $this->get_test_country_url( 'off' ) ),
+		) );
+	}
+
+	/**
+	 * URL that switches the test country (or clears it with 'off').
+	 *
+	 * @param  string $code ISO code or 'off'.
+	 * @return string
+	 */
+	public function get_test_country_url( string $code ): string {
+		return add_query_arg(
+			array(
+				'geoblock_test_country' => $code,
+				'_geoblock_nonce'       => wp_create_nonce( self::TEST_NONCE_ACTION ),
+			),
+			remove_query_arg( array( 'geoblock_test_country', '_geoblock_nonce' ) )
+		);
+	}
+
 	// -- Debug toolbar --------------------------------------------------
 
 	/**
@@ -133,23 +241,50 @@ class GeoBlock_Geolocation {
 			return;
 		}
 
-		$country = $this->get_country();
-		$ip      = $this->get_ip();
-		$flag    = $this->get_flag_emoji( $country );
-		$name    = $this->get_country_name( $country );
-		$source  = $this->get_detection_source();
+		$country   = $this->get_country();
+		$ip        = $this->get_ip();
+		$flag      = $this->get_flag_emoji( $country );
+		$name      = $this->get_country_name( $country );
+		$source    = $this->get_detection_source();
+		$testing   = $this->has_test_country();
+		$wc        = function_exists( 'WC' ) ? WC() : null;
+		$countries = ( $wc && isset( $wc->countries ) && $wc->countries ) ? $wc->countries->get_countries() : array();
 		?>
+		<style>
+			#geoblock-debug-bar{box-sizing:border-box;flex-wrap:wrap;gap:8px 20px !important;line-height:1.4;text-align:left;}
+			#geoblock-debug-bar *{box-sizing:border-box;}
+			#geoblock-debug-bar form{margin:0;display:flex;gap:8px;align-items:center;}
+			#geoblock-debug-bar select,#geoblock-debug-bar button{height:28px !important;min-height:0 !important;margin:0 !important;padding:0 10px !important;font:inherit !important;font-size:12px !important;line-height:26px !important;border-radius:4px !important;box-shadow:none !important;width:auto !important;}
+			#geoblock-debug-bar select{max-width:200px;padding-right:24px !important;background-color:#16304f !important;color:#fff !important;border:1px solid #4a78a8 !important;}
+			#geoblock-debug-bar button{cursor:pointer;background:#2e75b6 !important;color:#fff !important;border:1px solid #2e75b6 !important;text-transform:none !important;letter-spacing:0 !important;}
+			#geoblock-debug-bar button:hover{background:#3a86cb !important;}
+		</style>
 		<div id="geoblock-debug-bar" style="
 			position:fixed;bottom:0;left:0;right:0;z-index:99999;
 			background:#1e3a5f;color:#fff;font-family:monospace;font-size:13px;
 			padding:6px 16px;display:flex;gap:24px;align-items:center;
 			border-top:3px solid #2e75b6;">
 			<strong style="color:#a8c8e8;">GeoBlock Debug</strong>
-			<span><?php echo esc_html( $flag . ' ' . $name . ' (' . $country . ')' ); ?></span>
+			<span><?php echo esc_html( $flag . ' ' . $name . ( false === stripos( $name, '(' . $country . ')' ) ? ' (' . $country . ')' : '' ) ); ?></span>
 			<span style="color:#a8c8e8;">IP: <?php echo esc_html( $ip ); ?></span>
 			<span style="color:#ffd580;">Source: <?php echo esc_html( $source ); ?></span>
 			<span style="color:#88cc88;">WC Geo: <?php echo esc_html( $this->wc_geolocation_enabled() ? 'Enabled' : 'Disabled' ); ?></span>
 			<span style="color:#ffa07a;"><?php echo $this->is_force_geolocation_enabled() ? 'Force Geo: ON' : ''; ?></span>
+			<form method="get" action="">
+				<input type="hidden" name="_geoblock_nonce" value="<?php echo esc_attr( wp_create_nonce( self::TEST_NONCE_ACTION ) ); ?>">
+				<label for="geoblock-test-select" style="color:#a8c8e8;"><?php esc_html_e( 'Test as:', 'windcodex-geoblock' ); ?></label>
+				<select id="geoblock-test-select" name="geoblock_test_country">
+					<?php if ( $testing ) : ?>
+						<option value="off"><?php esc_html_e( 'Exit test mode', 'windcodex-geoblock' ); ?></option>
+					<?php else : ?>
+						<option value="off"><?php esc_html_e( 'My real location', 'windcodex-geoblock' ); ?></option>
+					<?php endif; ?>
+					<?php foreach ( $countries as $code => $label ) : ?>
+						<option value="<?php echo esc_attr( $code ); ?>" <?php selected( $testing && $code === $country ); ?>><?php echo esc_html( $label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<button type="submit"><?php esc_html_e( 'Apply', 'windcodex-geoblock' ); ?></button>
+			</form>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=geoblock-settings' ) ); ?>"
 			   style="color:#a8c8e8;margin-left:auto;">Settings -&gt;</a>
 		</div>
@@ -294,7 +429,10 @@ class GeoBlock_Geolocation {
 	 *
 	 * @return string
 	 */
-	private function get_detection_source(): string {
+	public function get_detection_source(): string {
+		if ( $this->has_test_country() ) {
+			return 'Test mode (admin override)';
+		}
 		$wc = function_exists( 'WC' ) ? WC() : null;
 		if ( is_user_logged_in() && $wc && $wc->customer instanceof WC_Customer ) {
 			$shipping = strtoupper( (string) $wc->customer->get_shipping_country() );
@@ -324,8 +462,8 @@ class GeoBlock_Geolocation {
 	 * @param  string $code
 	 * @return string
 	 */
-	private function get_flag_emoji( string $code ): string {
-		if ( strlen( $code ) !== 2 ) {
+	public function get_flag_emoji( string $code ): string {
+		if ( strlen( $code ) !== 2 || ! function_exists( 'mb_chr' ) ) {
 			return '??';
 		}
 		$offset = 127397; // ord('A') = 65; Regional Indicator A = U+1F1E6 = 127462; diff = 127397
@@ -342,7 +480,7 @@ class GeoBlock_Geolocation {
 	 * @param  string $code
 	 * @return string
 	 */
-	private function get_country_name( string $code ): string {
+	public function get_country_name( string $code ): string {
 		$wc        = function_exists( 'WC' ) ? WC() : null;
 		$countries = ( $wc && isset( $wc->countries ) && $wc->countries ) ? $wc->countries->get_countries() : array();
 		return $countries[ $code ] ?? $code;
