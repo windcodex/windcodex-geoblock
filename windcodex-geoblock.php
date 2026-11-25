@@ -13,11 +13,11 @@
  * Text Domain:       windcodex-geoblock
  * Domain Path:       /languages
  * Requires at least: 6.9
- * Tested up to:      7.0
+ * Tested up to:      7.1
  * Requires PHP:      7.4
  * Requires Plugins: woocommerce
  * WC requires at least: 7.0
- * WC tested up to:   10.6
+ * WC tested up to:   11.3
  *
  * @package GeoBlock_Country_Restrictions
  */

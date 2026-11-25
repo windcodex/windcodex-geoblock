@@ -94,11 +94,7 @@ class GeoBlock_Health {
 
 		$maxmind     = (array) get_option( 'woocommerce_maxmind_geolocation_settings', array() );
 		$has_license = ! empty( $maxmind['license_key'] );
-		$has_db      = false;
-		if ( class_exists( 'WC_Geolocation' ) && is_callable( array( 'WC_Geolocation', 'get_local_database_path' ) ) ) {
-			$path   = WC_Geolocation::get_local_database_path();
-			$has_db = $path && file_exists( $path );
-		}
+		$has_db      = $this->maxmind_database_exists();
 
 		if ( $has_db ) {
 			return array(
@@ -127,6 +123,29 @@ class GeoBlock_Health {
 		);
 	}
 
+	/**
+	 * Whether WooCommerce's MaxMind GeoLite2 database file is present.
+	 * Uses the integration's database service (the old WC_Geolocation helper
+	 * is deprecated since WooCommerce 3.9 and logs a notice).
+	 *
+	 * @return bool
+	 */
+	private function maxmind_database_exists(): bool {
+		if ( ! function_exists( 'WC' ) || ! WC()->integrations ) {
+			return false;
+		}
+		$integration = WC()->integrations->get_integration( 'maxmind_geolocation' );
+		if ( ! $integration || ! method_exists( $integration, 'get_database_service' ) ) {
+			return false;
+		}
+		$service = $integration->get_database_service();
+		if ( ! $service || ! method_exists( $service, 'get_database_path' ) ) {
+			return false;
+		}
+		$path = $service->get_database_path();
+		return $path && file_exists( $path );
+	}
+
 	private function check_page_cache(): array {
 		$label   = __( 'Page caching', 'windcodex-geoblock' );
 		$mode    = get_option( 'woocommerce_default_customer_address' );
@@ -153,6 +172,7 @@ class GeoBlock_Health {
 		$label   = __( 'Your detected country', 'windcodex-geoblock' );
 		$country = $this->geo->get_country();
 		$ip      = $this->geo->get_ip();
+		$name    = $this->geo->get_country_name( $country );
 		$flag    = $this->geo->get_flag_emoji( $country );
 		$flag    = '??' === $flag ? '' : $flag . ' ';
 
@@ -160,7 +180,7 @@ class GeoBlock_Health {
 		$detail       = sprintf(
 			/* translators: 1: country name and code, 2: IP address, 3: detection source */
 			__( '%1$s - IP %2$s - source: %3$s', 'windcodex-geoblock' ),
-			$flag . $this->geo->get_country_name( $country ) . ' (' . $country . ')',
+			$flag . $name . ( false === stripos( $name, '(' . $country . ')' ) ? ' (' . $country . ')' : '' ),
 			$ip,
 			$this->geo->get_detection_source()
 		);

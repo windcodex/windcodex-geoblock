@@ -2,11 +2,11 @@
 Contributors: windcodex
 Tags: woocommerce, country restriction, geo blocking, woocommerce country restrictions, restrict products by country
 Requires at least: 6.9
-Tested up to: 7.0
+Tested up to: 7.1
 Stable tag: 1.1.0
 Requires PHP: 7.4
 WC requires at least: 7.0
-WC tested up to: 10.6
+WC tested up to: 11.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
